@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<order>
+    <billBpartner>
+        <addressOfficial>
+            <city>Staden</city>
+            <co></co>
+            <email>epost@void.com</email>
+            <houseNo></houseNo>
+            <locationId>0</locationId>
+            <phone>555-555555</phone>
+            <postal>70374</postal>
+            <street>Vägen 3</street>
+        </addressOfficial>
+        <company>false</company>
+        <emailInvoice>false</emailInvoice>
+        <identityNo>1000000</identityNo>
+        <name>Förnamn Efternamn</name>
+        <taxId>199912319999</taxId>
+        <bPartnerId>0</bPartnerId>
+    </billBpartner>
+    <bpartner>
+        <addressOfficial>
+            <city>Staden</city>
+            <co></co>
+            <email>epost@void.com</email>
+            <houseNo></houseNo>
+            <locationId>0</locationId>
+            <phone>555-555555</phone>
+            <postal>70374</postal>
+            <street>Vägen 3</street>
+        </addressOfficial>
+        <company>false</company>
+        <emailInvoice>false</emailInvoice>
+        <identityNo>1000000</identityNo>
+        <name>Förnamn Efternamn</name>
+        <taxId>199912319999</taxId>
+        <bPartnerId>0</bPartnerId>
+    </bpartner>
+    <currency>SEK</currency>
+    <dateOrdered>2018-12-10T01:41:39.907+01:00</dateOrdered>
+    <documentDate>2018-12-10T01:41:39.907+01:00</documentDate>
+    <documentKey>87358</documentKey>
+    <grandTotal>39.0</grandTotal>
+    <lines>
+        <key>70700</key>
+        <lineNet>34.82</lineNet>
+        <lineNo>1</lineNo>
+        <name>Dextros 1kg</name>
+        <priceActual>39.0</priceActual>
+        <priceNormal>39.0</priceNormal>
+        <pricesIncludeVAT>true</pricesIncludeVAT>
+        <productKey>70700</productKey>
+        <qtyDelivered>0.0</qtyDelivered>
+        <qtyEntered>1.0</qtyEntered>
+        <taxAmount>4.18</taxAmount>
+        <taxPercent>12.0</taxPercent>
+    </lines>
+    <orderKey>87358</orderKey>
+    <salesOrder>true</salesOrder>
+    <vatTotal>4.18</vatTotal>
+</order>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<!-- Client Secret here -->
+	<clientSecret>XYZ</clientSecret>
+	
+	<!-- Access Token here -->
+	<accessToken>abc-123</accessToken>
+	
+</configuration>
