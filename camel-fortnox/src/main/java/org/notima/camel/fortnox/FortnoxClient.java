@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.camel.Header;
-import org.apache.log4j.Logger;
 import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Customer;
@@ -19,6 +18,7 @@ import org.notima.api.fortnox.entities3.Invoices;
 import org.notima.api.fortnox.entities3.Order;
 import org.notima.api.fortnox.entities3.OrderSubset;
 import org.notima.api.fortnox.entities3.Orders;
+import org.notima.api.fortnox.entities3.Supplier;
 import org.notima.api.fortnox.entities3.Voucher;
 import org.notima.api.fortnox.entities3.WriteOff;
 import org.notima.api.fortnox.entities3.WriteOffs;
@@ -26,6 +26,8 @@ import org.notima.businessobjects.adapter.fortnox.FortnoxAdapter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for accessing Fortnox using Camel.
@@ -60,12 +62,15 @@ public class FortnoxClient {
 	// Tax id associated with the access token
 	private String	taxId;
 	
+	// Default supplier name if a new supplier is created automatically (@see getSupplierByOrgNo)
+	public static String DEFAULT_NEW_SUPPLIER_NAME = "Supplier created by Fortnox4J"; 
+	
 	// Cache functions
 	private String	lastClientSecret;
 	private String	lastAccessToken;
 	private FortnoxAdapter 	bof;
 	
-	private Logger log = Logger.getLogger(FortnoxClient.class);
+	private Logger log = LoggerFactory.getLogger(FortnoxClient.class);
 	
 
 	/**
@@ -98,7 +103,7 @@ public class FortnoxClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public FortnoxAdapter getFactory(String accessToken, String clientSecret) throws Exception {
+	private FortnoxAdapter getFactory(String accessToken, String clientSecret) throws Exception {
 		
 		if (lastClientSecret==null || lastAccessToken==null ||
 				!lastClientSecret.equals(clientSecret) || !lastAccessToken.equals(accessToken)
@@ -196,6 +201,36 @@ public class FortnoxClient {
 		}
 
 		return result;
+	}
+	
+	/**
+	 * Gets a supplier with given orgNo. If the supplier is missing it's created by default.
+	 * 
+	 * @param orgNo
+	 * @return
+	 */
+	public Supplier getSupplierByOrgNo(
+			@Header(value="clientSecret")String clientSecret,
+			@Header(value="accessToken")String accessToken,
+			@Header(value="orgNo")String orgNo,
+			@Header(value="createIfNotFound")Boolean createIfNotFound) throws Exception {
+		
+		if (createIfNotFound==null) createIfNotFound = Boolean.TRUE;
+
+		bof = getFactory(accessToken, clientSecret);
+		
+		Supplier supplier = bof.getClient().getSupplierByTaxId(orgNo, true);
+		
+		if (supplier==null) {
+			supplier = new Supplier();
+			supplier.setSupplierNumber(orgNo);
+			supplier.setOrganisationNumber(orgNo);
+			supplier.setName(DEFAULT_NEW_SUPPLIER_NAME + " : " + orgNo);
+			supplier = bof.getClient().setSupplier(supplier);
+		}
+		
+		return supplier;
+		
 	}
 	
 	/**
