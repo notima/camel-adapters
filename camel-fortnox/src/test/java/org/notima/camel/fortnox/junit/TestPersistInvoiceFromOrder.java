@@ -7,38 +7,14 @@ import java.net.URL;
 
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.configuration.FileConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.notima.camel.fortnox.FortnoxClient;
 import org.notima.generic.businessobjects.Order;
 
-public class TestPersistInvoiceFromOrder {
-
-	private String clientSecret;
-	private String accessToken;
-	
-	@Before
-	public void setUp() throws Exception {
-		
-		FileConfiguration fc = new XMLConfiguration();
-		URL url = ClassLoader.getSystemResource("test-config.xml");
-		fc.setURL(url);
-		fc.load();
-		
-		clientSecret = fc.getString("clientSecret");
-		accessToken = fc.getString("accessToken");
-		
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+public class TestPersistInvoiceFromOrder extends TestCamelFortnox {
 
 	@Test
-	public void test() {
+	public void testPersistInvoiceFromOrder() {
 
 		try {
 			

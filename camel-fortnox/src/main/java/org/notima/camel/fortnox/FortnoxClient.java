@@ -26,6 +26,8 @@ import org.notima.businessobjects.adapter.fortnox.FortnoxAdapter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
+import org.notima.piggyback.FieldRider;
+import org.notima.piggyback.FieldRiderKeyValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,7 +228,7 @@ public class FortnoxClient {
 			supplier.setSupplierNumber(orgNo);
 			supplier.setOrganisationNumber(orgNo);
 			supplier.setName(DEFAULT_NEW_SUPPLIER_NAME + " : " + orgNo);
-			supplier = bof.getClient().setSupplier(supplier);
+			supplier = bof.getClient().setSupplier(supplier, true);
 		}
 		
 		return supplier;
@@ -825,5 +827,111 @@ public class FortnoxClient {
 		return voucher.getVoucherSeries() + voucher.getVoucherNumber();
 		
 	}
+
+	/**
+	 * Get a single settings on the given supplier
+	 * 
+	 * @param clientSecret		The client secret
+	 * @param accessToken		The access token
+	 * @param supplierOrgNo		The org number of supplier where settings are stored.
+	 * @param settingKey		The key of the setting.
+	 * @return					A map of settings.
+	 * @throws Exception		If something goes wrong.
+	 */
+	public String getSettingFromSupplier(
+			@Header(value="clientSecret")String clientSecret, 
+			@Header(value="accessToken")String accessToken,
+			@Header(value="supplierOrgNo")String supplierOrgNo,
+			@Header(value="settingKey")String settingKey) throws Exception {
+		
+		Map<String,String> map = getSettingsFromSupplier(clientSecret, accessToken, supplierOrgNo);
+		if (map!=null) {
+			return map.get(settingKey);
+		} else {
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Get a map of settings on the given supplier
+	 * 
+	 * @param clientSecret		The client secret
+	 * @param accessToken		The access token
+	 * @param supplierOrgNo		The org number of supplier where settings are stored.
+	 * @return					A map of settings.
+	 * @throws Exception		If something goes wrong.
+	 */
+	public Map<String, String> getSettingsFromSupplier(
+			@Header(value="clientSecret")String clientSecret, 
+			@Header(value="accessToken")String accessToken,
+			@Header(value="supplierOrgNo")String supplierOrgNo) throws Exception {
+		
+		bof = getFactory(accessToken, clientSecret);
+		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
+		
+		Supplier supplier = client.getSupplierByTaxId(supplierOrgNo, true);
+		if (supplier==null) {
+			log.warn("Supplier with tax id {} doesn't exist.", supplierOrgNo);
+			return null;
+		}
+
+		String comment = supplier.getComments();
+		FieldRider rider = new FieldRider(comment);
+		
+		return rider.getSettingsMap();
+		
+	}
+	
+	/**
+	 * Writes a setting to supplier
+	 * 
+	 * @param clientSecret		The client secret.
+	 * @param accessToken		The access token
+	 * @param supplierOrgNo		Supplier's org no
+	 * @param settingKey		Setting key
+	 * @param settingValue		Setting value
+	 * @return	The supplier if successful. Null if supplier is not found.
+	 * @throws Exception 		If something goes wrong
+	 */
+	public Supplier writeSettingToSupplier(
+			@Header(value="clientSecret")String clientSecret, 
+			@Header(value="accessToken")String accessToken,
+			@Header(value="supplierOrgNo")String supplierOrgNo, 
+			@Header(value="settingKey")String settingKey, 
+			@Header(value="settingValue")String settingValue) throws Exception {
+
+		bof = getFactory(accessToken, clientSecret);
+		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
+		
+		Supplier supplier = client.getSupplierByTaxId(supplierOrgNo, true);
+		if (supplier==null) {
+			log.warn("Supplier with tax id {} doesn't exist.", supplierOrgNo);
+			return null;
+		}
+		
+		String comment = supplier.getComments();
+		
+		// Scan for settings in comments
+		FieldRider rider = new FieldRider(comment);
+		FieldRiderKeyValuePair kvp = rider.lookupKeyValuePair(settingKey);
+		if (kvp==null) {
+			// The key doesn't yet exist.
+			kvp = new FieldRiderKeyValuePair(settingKey, settingValue);
+			rider.addKeyValuePair(kvp);
+		} else {
+			// Update the value
+			kvp.setValue(settingValue);
+		}
+
+		// Save the setting
+		StringBuffer newContent = rider.updateContent();
+		supplier.setComments(newContent.toString());
+		
+		supplier = client.setSupplier(supplier, false);
+		
+		return supplier;
+	}
+	
 	
 }
