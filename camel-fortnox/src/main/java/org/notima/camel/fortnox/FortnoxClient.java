@@ -27,8 +27,6 @@ import org.notima.businessobjects.adapter.fortnox.FortnoxAdapter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
-import org.notima.piggyback.FieldRider;
-import org.notima.piggyback.FieldRiderKeyValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
