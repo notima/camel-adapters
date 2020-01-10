@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.camel.Header;
+import org.notima.api.fortnox.Fortnox4JSettings;
 import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Customer;
@@ -869,17 +870,9 @@ public class FortnoxClient {
 		
 		bof = getFactory(accessToken, clientSecret);
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
+		Fortnox4JSettings settings = new Fortnox4JSettings(client);
 		
-		Supplier supplier = client.getSupplierByTaxId(supplierOrgNo, true);
-		if (supplier==null) {
-			log.warn("Supplier with tax id {} doesn't exist.", supplierOrgNo);
-			return null;
-		}
-
-		String comment = supplier.getComments();
-		FieldRider rider = new FieldRider(comment);
-		
-		return rider.getSettingsMap();
+		return settings.getSettingsFromSupplierByOrgNo(supplierOrgNo);
 		
 	}
 	
@@ -903,34 +896,9 @@ public class FortnoxClient {
 
 		bof = getFactory(accessToken, clientSecret);
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
+		Fortnox4JSettings settings = new Fortnox4JSettings(client);
 		
-		Supplier supplier = client.getSupplierByTaxId(supplierOrgNo, true);
-		if (supplier==null) {
-			log.warn("Supplier with tax id {} doesn't exist.", supplierOrgNo);
-			return null;
-		}
-		
-		String comment = supplier.getComments();
-		
-		// Scan for settings in comments
-		FieldRider rider = new FieldRider(comment);
-		FieldRiderKeyValuePair kvp = rider.lookupKeyValuePair(settingKey);
-		if (kvp==null) {
-			// The key doesn't yet exist.
-			kvp = new FieldRiderKeyValuePair(settingKey, settingValue);
-			rider.addKeyValuePair(kvp);
-		} else {
-			// Update the value
-			kvp.setValue(settingValue);
-		}
-
-		// Save the setting
-		StringBuffer newContent = rider.updateContent();
-		supplier.setComments(newContent.toString());
-		
-		supplier = client.setSupplier(supplier, false);
-		
-		return supplier;
+		return settings.writeSettingToSupplierByOrgNo(supplierOrgNo, settingKey, settingValue);
 	}
 	
 	
