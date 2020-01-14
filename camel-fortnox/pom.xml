@@ -16,6 +16,7 @@
 				<directory>src/test/resources</directory>
 				<excludes>
 					<exclude>test-config*</exclude>
+					<exclude>*.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -26,6 +27,50 @@
 				</excludes>
 			</resource>
 		</resources>
+		
+		
+		<plugins>
+		
+			<!-- 
+				OSGI-bundle packaging plugin
+			
+				 mvn org.apache.felix:maven-bundle-plugin:bundle
+				 mvn -DskipTests install bundle:install 
+			-->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>4.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>org.notima.camel.fortnox,
+										org.notima.businessobjects.adapter.fortnox,
+										org.notima.api.fortnox,
+										org.notima.api.fortnox.clients,
+										org.notima.api.fortnox.entities3
+						</Export-Package>
+						<!-- 
+						<Private-Package>org.slf4j,
+										 org.slf4j.impl 
+						</Private-Package> -->
+						<Import-Package>org.notima.generic.businessobjects,
+										org.notima.generic.businessobjects.util,
+										org.notima.generic.ifacebusinessobjects,
+										org.slf4j,
+										org.notima.bg,
+										org.notima.bg.bgmax,
+										org.notima.bg.lb,
+										org.notima.tilisiirto,
+										org.apache.camel
+										</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+					</instructions>
+				</configuration>
+			</plugin>
+			
+		</plugins>
   
   </build>
   

@@ -6,7 +6,58 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>camel-svea-webpay</artifactId>
-  <name>camel-svea-webpay</name>
+  <name>Svea Webpay Camel Adapter</name>
+  
+  <build>
+  
+		<plugins>
+		
+			<!-- 
+				OSGI-bundle packaging plugin
+			
+				 mvn org.apache.felix:maven-bundle-plugin:bundle
+				 mvn -DskipTests install bundle:install 
+			-->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>4.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>com.svea.businessobjects,
+										com.svea.businessobjects.pmtadmin,
+										com.svea.businessobjects.sveaadmin,
+										com.svea.webpay.common.auth,
+										com.svea.webpay.common.conv,
+										com.svea.webpay.common.reconciliation,
+										com.svea.webpay.common.reconciliation.conv,
+										com.svea.webpayadmin,
+										com.svea.webpayadmin.report
+						</Export-Package>
+						<Private-Package>
+							com.svea.webpayadminservice.*
+						</Private-Package>
+						<Import-Package>org.notima.generic.businessobjects,
+										org.notima.generic.businessobjects.util,
+										org.notima.generic.ifacebusinessobjects,
+										org.slf4j,
+										org.notima.bg,
+										org.notima.bg.bgmax,
+										org.notima.bg.lb,
+										org.notima.tilisiirto,
+										org.apache.camel										
+										</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api|camel-core</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+					</instructions>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+  
+  </build>
+  
   <dependencies>
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>

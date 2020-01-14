@@ -7,4 +7,55 @@
   </parent>
   <artifactId>camel-utils</artifactId>
   <name>Camel Utilities</name>
+  
+  <build>
+  
+		<plugins>
+		
+			<!-- 
+				OSGI-bundle packaging plugin
+			
+				 mvn org.apache.felix:maven-bundle-plugin:bundle
+				 mvn -DskipTests install bundle:install 
+			-->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>4.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>
+										org.notima.generic.businessobjects,
+										org.notima.generic.businessobjects.util,
+										org.notima.generic.ifacebusinessobjects,
+										org.notima.camel.processor,
+										org.notima.camel.utils,										
+										org.notima.bg,
+										org.notima.bg.bgmax,
+										org.notima.bg.lb,
+										org.notima.tilisiirto
+										</Export-Package>
+						<Import-Package>
+										org.apache.camel,
+										org.slf4j
+						</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!camel-core|log4j|slf4j*</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						
+					</instructions>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+  
+  </build>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.notima.generic</groupId>
+  		<artifactId>businessobjects</artifactId>
+  		<version>0.1.15-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
