@@ -284,7 +284,7 @@ public class FortnoxClient {
 		List<org.notima.generic.businessobjects.Invoice> result = new ArrayList<org.notima.generic.businessobjects.Invoice>();
 		
 		List<org.notima.api.fortnox.entities3.Invoice> finvoices = getFortnoxInvoices(
-				clientSecret, accessToken, FortnoxAdapter.LIST_UNPAIDOVERDUE);
+				clientSecret, accessToken, FortnoxClient3.FILTER_UNPAID_OVERDUE);
 		
 		if (finvoices!=null) {
 			for (org.notima.api.fortnox.entities3.Invoice ii : finvoices)

@@ -35,6 +35,7 @@
 				OSGI-bundle packaging plugin
 			
 				 mvn org.apache.felix:maven-bundle-plugin:bundle
+				 mvn install org.apache.felix:maven-bundle-plugin:bundle bundle:install-file
 				 mvn -DskipTests install bundle:install 
 			-->
 			<plugin>
