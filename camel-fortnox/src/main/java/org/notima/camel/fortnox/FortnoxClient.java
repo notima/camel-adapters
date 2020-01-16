@@ -181,14 +181,14 @@ public class FortnoxClient {
 	}
 
 	/**
-	 * Gets the name of the client
+	 * Read company settings.
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
-	 * @return
-	 * @throws Exception
+	 * @param clientSecret		The client secret
+	 * @param accessToken		The access token
+	 * @return					Company settings
+	 * @throws Exception		If something goes wrong
 	 */
-	public String getClientName(
+	public CompanySetting getCompanySetting(
 			@Header(value="clientSecret")String clientSecret,
 			@Header(value="accessToken")String accessToken
 			) throws Exception {
@@ -196,6 +196,24 @@ public class FortnoxClient {
 		bof = getFactory(accessToken, clientSecret);
 		
 		CompanySetting cs = bof.getClient().getCompanySetting();
+		return cs;
+		
+	}
+	
+	/**
+	 * Convenience class to get the name of the client
+	 * 
+	 * @param clientSecret		The client secret
+	 * @param accessToken		The access token
+	 * @return		The name of the client.
+	 * @throws Exception		If something goes wrong.
+	 */
+	public String getClientName(
+			@Header(value="clientSecret")String clientSecret,
+			@Header(value="accessToken")String accessToken
+			) throws Exception {
+
+		CompanySetting cs = getCompanySetting(clientSecret, accessToken);
 		String result = null;
 		if (cs!=null) {
 			result = cs.getName();

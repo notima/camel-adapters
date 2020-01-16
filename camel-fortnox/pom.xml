@@ -51,10 +51,6 @@
 										org.notima.api.fortnox.clients,
 										org.notima.api.fortnox.entities3
 						</Export-Package>
-						<!-- 
-						<Private-Package>org.slf4j,
-										 org.slf4j.impl 
-						</Private-Package> -->
 						<Import-Package>org.notima.generic.businessobjects,
 										org.notima.generic.businessobjects.util,
 										org.notima.generic.ifacebusinessobjects,
@@ -63,7 +59,51 @@
 										org.notima.bg.bgmax,
 										org.notima.bg.lb,
 										org.notima.tilisiirto,
-										org.apache.camel
+										org.apache.camel,
+										javax.xml.bind,
+										javax.net.ssl,
+										javax.net,
+										javax.naming,
+										javax.security.auth.x500,
+										javax.naming.ldap,
+										javax.naming.directory,
+										javax.activation,
+										javax.annotation,
+										javax.crypto,
+										javax.crypto.spec,
+										javax.imageio,
+										javax.imageio.stream,
+										javax.lang.model,
+										javax.management,
+										javax.management.modelmbean,
+										javax.management.openmbean,
+										javax.management.remote,
+										javax.naming.spi,
+										javax.servlet,javax.sql,
+										javax.xml.bind.annotation,
+										javax.xml.bind.annotation.adapters,
+										javax.xml.bind.attachment,
+										javax.xml.bind.helpers,
+										javax.xml.datatype,javax.xml.namespace,
+										javax.xml.parsers,
+										javax.xml.stream,
+										javax.xml.stream.events,
+										javax.xml.transform,
+										javax.xml.transform.dom,javax.xml.transform.sax,
+										javax.xml.transform.stax,
+										javax.xml.transform.stream,
+										javax.xml.validation,
+										javax.xml.xpath,
+										org.osgi.framework,
+										org.osgi.framework.wiring,
+										org.w3c.dom,
+										org.w3c.dom.ls,
+										org.xml.sax,
+										org.xml.sax.ext,
+										org.xml.sax.helpers,
+										sun.misc,
+										javax.security.auth,
+										javax.security.cert										
 										</Import-Package>
 						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
