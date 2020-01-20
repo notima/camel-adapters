@@ -7,7 +7,7 @@
   </parent>
   <artifactId>camel-fortnox</artifactId>
   <name>Fortnox Camel Adapter</name>
-  
+  <packaging>bundle</packaging>  
   <build>
 
 		<!-- Exclude any credential files -->	
@@ -79,7 +79,6 @@
 										javax.management.openmbean,
 										javax.management.remote,
 										javax.naming.spi,
-										javax.servlet,javax.sql,
 										javax.xml.bind.annotation,
 										javax.xml.bind.annotation.adapters,
 										javax.xml.bind.attachment,
