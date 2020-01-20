@@ -23,6 +23,8 @@
 		<module>camel-fortnox</module>
 		<module>camel-svea-webpay</module>
 		<module>camel-utils</module>
+		<module>camel-ubl</module>
+		<module>camel-feature</module>
 	</modules>
 
 	<build>
@@ -80,7 +82,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.1</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -125,33 +127,54 @@
 		</plugins>
 	</build>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- Camel BOM -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-parent</artifactId>
+        <version>2.24.3</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 
 	<dependencies>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.29</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.29</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
-			<version>2.24.3</version>
 		</dependency>
+		
+	    <!-- Testing -->
+	    <dependency>
+	      <groupId>org.apache.camel</groupId>
+	      <artifactId>camel-blueprint</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.apache.camel</groupId>
+	      <artifactId>camel-test-blueprint</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+		
 	</dependencies>
 	
 	<organization>
