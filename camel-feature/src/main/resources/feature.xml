@@ -49,4 +49,10 @@
 
     </feature>
     
+    <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
+    
+    	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay/0.0.1-SNAPSHOT</bundle>
+    
+    </feature>
+    
 </features>
