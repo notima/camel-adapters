@@ -10,26 +10,78 @@
         http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
         ">
 
-	<cm:property-placeholder persistent-id="camel-ubl-settings"/>
+	<!-- 
+		Define default settings. These can be overridden by ${karaf.home}/etc/camel-ubl-settings.cfg
+	 -->
+	<cm:property-placeholder persistent-id="camel-ubl-settings" update-strategy="reload">
+	    <cm:default-properties>
+	      <cm:property name="incomingDirectory" value="/home/user/tmp/incoming" />
+	      <cm:property name="einvoiceDirectory" value="/home/user/tmp" />
+	    </cm:default-properties>
+	</cm:property-placeholder>
 
 	<bean id="ubl" class="org.notima.generic.ubl.factory.UBL21Converter"/>
 	<bean id="ublCamelClient" class="org.notima.camel.ubl.UblCamelClient"/>
 
+	<!-- 
+		Context that converts XML-files in business objects format to e-invoice (UBL / BIS 3.0) format.
+	 -->
 	<camelContext id="BusinessObjectsToEInvoice"
 		xmlns="http://camel.apache.org/schema/blueprint">
 		
+		<!--
+			Route that scans a directory for incoming XML-files and processes them as they come in.
+			Remember to start up the route. 
+			It's not started by default to make sure the incoming directory isn't scanned before it's properly set. 
+		 -->
+		<route id="PollIncomingDirectory" autoStartup="false">
+		
+			<from uri="file://{{incomingDirectory}}?include=.*.xml"/>
+			
+			<log message="Processing file: ${header.CamelFileName}"/>
+			
+			<to uri="direct:convertInvoice"/>
+		
+		</route>
+
+		<!--
+			Route that creates an UBL-invoice in the einvoiceDirectory.
+			The route expects a Business Objects Invoice in the body. 
+		 -->		
 		<route id="CreateInvoiceFile">
 		
 			<from uri="direct:convertInvoice"/>
 																					
 			<bean ref="ublCamelClient" method="convertFromBusinessObjectsInvoice"/>
+			
+			<!-- Save e-invoice in header -->
+			<setHeader headerName="einvoice">
+				<simple>${body}</simple>
+			</setHeader>
+			
+			<!-- Get customer id from e-invoice -->
+			<bean ref="ubl" method="getCustomerId"/>
+			<setHeader headerName="recipientId">
+				<simple>${body.value}</simple>
+			</setHeader>
+			
+			<!-- Get invoice number -->
+			<setHeader headerName="invoiceNo">
+				<simple>${header.einvoice.getIDValue}</simple>
+			</setHeader>		
+
+			<!-- Convert the e-invoice to an XML-representation -->
+			<transform>
+				<simple>${header.einvoice}</simple>
+			</transform>
 			<bean ref="ubl" method="writeToString"/>
 			
 			<!-- Generate file name -->
 			<setHeader headerName="CamelFileName">
-				<simple>einvoice.xml</simple>
+				<simple>einvoice-${header.recipientId}-${header.invoiceNo}.xml</simple>
 			</setHeader>
 			
+			<!-- Write the file -->
 			<to uri="file://{{einvoiceDirectory}}"/>
 		
 		</route>

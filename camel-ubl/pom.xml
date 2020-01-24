@@ -38,7 +38,16 @@
 							org.notima.camel.ubl
 						</Export-Package>
 						<Import-Package>org.notima.generic.ubl.factory,
-										org.apache.camel
+										org.apache.camel,
+										org.notima.generic.businessobjects,
+										org.notima.generic.businessobjects.util,
+										org.notima.generic.ifacebusinessobjects,
+										oasis.names.specification.*,
+										com.helger.*,
+										com.phloc.*,
+										com.sun.xml.bind.*,
+										org.hamcrest,
+										org.hamcrest.core										
 						</Import-Package>
 						<Private-Package></Private-Package>
 						<Embed-Dependency>artifactId=joda-time;scope=compile|runtime</Embed-Dependency>
