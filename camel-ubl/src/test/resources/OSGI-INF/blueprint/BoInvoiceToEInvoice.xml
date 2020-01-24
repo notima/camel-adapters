@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xsi:schemaLocation="
+        http://www.osgi.org/xmlns/blueprint/v1.0.0
+        http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+        http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd
+        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 
+        http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+        ">
+
+	<cm:property-placeholder persistent-id="camel-ubl-settings"/>
+
+	<bean id="ubl" class="org.notima.generic.ubl.factory.UBL21Converter"/>
+	<bean id="ublCamelClient" class="org.notima.camel.ubl.UblCamelClient"/>
+
+	<camelContext id="BusinessObjectsToEInvoice"
+		xmlns="http://camel.apache.org/schema/blueprint">
+		
+		<route id="CreateInvoiceFile">
+		
+			<from uri="direct:convertInvoice"/>
+																					
+			<bean ref="ublCamelClient" method="convertFromBusinessObjectsInvoice"/>
+			<bean ref="ubl" method="writeToString"/>
+			
+			<!-- Generate file name -->
+			<setHeader headerName="CamelFileName">
+				<simple>einvoice.xml</simple>
+			</setHeader>
+			
+			<to uri="file://{{einvoiceDirectory}}"/>
+		
+		</route>
+		
+
+	</camelContext>
+
+</blueprint>
