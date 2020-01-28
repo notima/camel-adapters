@@ -105,7 +105,7 @@
 										javax.security.auth,
 										javax.security.cert										
 										</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api</Embed-Dependency>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|camel-core|businessobjects|bankgiro-api</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
 				</configuration>
