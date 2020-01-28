@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>camel-feature</artifactId>
   <packaging>bundle</packaging>
@@ -36,6 +36,7 @@
   	  <plugin>
   	  	<groupId>org.codehaus.mojo</groupId>
   	  	<artifactId>build-helper-maven-plugin</artifactId>
+  	  	<version>3.0.0</version>
   	  	<executions>
   	  		<execution>
   	  			<id>attach-artifacts</id>

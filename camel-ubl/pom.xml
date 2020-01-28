@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>camel-ubl</artifactId>
   <packaging>bundle</packaging>
@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>org.generic.businessobjects.adapter</groupId>
 			<artifactId>ublAdapter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		
 	</dependencies>
