@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
   </parent>
   <artifactId>camel-fortnox</artifactId>
   <name>Fortnox Camel Adapter</name>
@@ -134,7 +134,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>fortnoxAdapter</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.1-SNAPSHOT</version>
   	</dependency>
   	
   	

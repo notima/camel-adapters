@@ -25,6 +25,9 @@ public class FortnoxClientManager {
 	private Logger log = LoggerFactory.getLogger(FortnoxClientManager.class);	
 	
 	private FortnoxClientList clientList;
+	
+	// The path to the clients file
+	private String	clientsFile;
 
 	public FortnoxClientManager() {}
 	
@@ -39,10 +42,56 @@ public class FortnoxClientManager {
 		
 	}
 	
+	public FortnoxClientManager getThis() {
+		return this;
+	}
+	
+	/**
+	 * Takes the FortnoxClientInfo parameter and updates / adds it to the
+	 * client list and saves the list to the file specified by clientsFile.
+	 * 
+	 * @param ci		The client info
+	 * @return			The client info.
+	 * @throws Exception	If something goes wrong.
+	 */
+	public FortnoxClientInfo updateAndSaveClientInfo(FortnoxClientInfo ci) throws Exception {
+		
+		if (ci.getOrgNo()==null) {
+			throw new Exception("OrgNo is mandatory");
+		}
+		
+		FortnoxClientInfo dst = getClientInfoByOrgNo(ci.getOrgNo());
+		if (dst==null) {
+			dst = addClient(ci);
+		} else {
+			// Update existing
+			dst.setAccessToken(ci.getAccessToken());
+			dst.setClientSecret(ci.getClientSecret());
+		}
+		
+		// Save to file if a file is specified
+		if (clientsFile!=null) {
+			FortnoxUtil.writeFortnoxClientListToFile(clientList, clientsFile);
+			log.info("{} file updated.");
+		} else {
+			log.warn("No FortnoxClientsFile specified. Update of orgNo {} not persisted.", ci.getOrgNo());
+		}
+		
+		return dst;
+		
+	}
+
+	/**
+	 * Reads clients from xml-file.
+	 * 
+	 * @param fortnoxClientsFile	Path to XML file. Can be in classpath.
+	 * @return	True if clients where read.
+	 */
 	public Boolean readClientsFromFile(String fortnoxClientsFile) {
 		
 		try {
 			clientList = FortnoxUtil.readFortnoxClientListFromFile(fortnoxClientsFile);
+			clientsFile = fortnoxClientsFile;
 			return clientList!=null ? Boolean.TRUE : Boolean.FALSE; 
 		} catch (JAXBException e) {
 			log.warn("Can't read Fortnox Client file: {} ", fortnoxClientsFile);
@@ -50,6 +99,19 @@ public class FortnoxClientManager {
 			return Boolean.FALSE;
 		}
 		
+	}
+
+	/**
+	 * Path to the clients xml-file.
+	 * 	
+	 * @return	A path if set.
+	 */
+	public String getClientsFile() {
+		return clientsFile;
+	}
+
+	public void setClientsFile(String clientsFile) {
+		this.clientsFile = clientsFile;
 	}
 
 	/**
@@ -73,6 +135,25 @@ public class FortnoxClientManager {
 		}
 		return list;
 	}
+
+	/**
+	 * Adds a new client info to the list.
+	 * No checking for duplicates is made here.
+	 * 
+	 * @param ci
+	 * @return
+	 */
+	public FortnoxClientInfo addClient(FortnoxClientInfo ci) {
+		
+		List<FortnoxClientInfo> list = getFortnoxClients();
+		list.add(ci);
+		ListOfClientInfo ll = clientList.getClients();
+		if (ll==null) {
+			ll = new ListOfClientInfo();
+		}
+		ll.setFortnoxClient(list);
+		return ci;
+	}
 	
 	/**
 	 * Returns the client list data
@@ -86,9 +167,6 @@ public class FortnoxClientManager {
 	public void setClientList(FortnoxClientList clientList) {
 		this.clientList = clientList;
 	}
-	
-	
-	
 
 	/**
 	 * Gets client info by using the org no as key.
