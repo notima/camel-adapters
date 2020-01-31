@@ -343,13 +343,16 @@ public class FortnoxClient {
 	 * 
 	 * @param clientSecret
 	 * @param accessToken
-	 * @param referenceField
+	 * @param referenceField	Possible values ExternalInvoiceReference1, ExternalInvoiceReference2, 
+	 * 							InvoiceReference, OCR, OrderReference, OurReference, YourOrderNumber, YourReference
 	 * @return
 	 */
 	public Map<String,Invoice> getInvoiceMap(String clientSecret, String accessToken, String referenceField) throws Exception {
 		
 		if (invoiceMap==null || !accessToken.equals(mapAccessToken)) {
 
+			log.info("Refreshing invoiceMap. This might take some time...");
+			
 			bof = getFactory(accessToken, clientSecret);
 			
 			CompanySetting cs = bof.getClient().getCompanySetting();
@@ -374,12 +377,36 @@ public class FortnoxClient {
 			if (subsetList==null)
 				return invoiceMap;
 			
+			log.info("{} invoices to map up.", subsetList.size());
+
+			int invoiceCount = 0;
+			
 			Invoice i;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
-				if ("yourOrderNumber".equals(referenceField)) {
+				if ("yourOrderNumber".equalsIgnoreCase(referenceField)) {
 					invoiceMap.put(i.getYourOrderNumber(), i);
+				} else if ("ExternalInvoiceReference1".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(ii.getExternalInvoiceReference1(), i);
+				} else if ("ExternalInvoiceReference2".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(ii.getExternalInvoiceReference2(), i);
+				} else if ("InvoiceReference".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(i.getInvoiceReference(), i);
+				} else if ("OCR".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(i.getOCR(), i);
+				} else if ("OrderReference".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(i.getOrderReference(), i);
+				} else if ("OurReference".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(i.getOurReference(), i);
+				} else if ("YourReference".equalsIgnoreCase(referenceField)) {
+					invoiceMap.put(i.getYourReference(), i);
 				}
+				
+				invoiceCount++;
+				if (invoiceCount%100 == 0) {
+					log.info("{} invoices mapped...", invoiceCount);
+				}
+				
 			}
 			// Associate invoice map access token with access token
 			mapAccessToken = accessToken;
@@ -436,9 +463,28 @@ public class FortnoxClient {
 		return orderMap;
 	}
 	
+
+	/**
+	 * Helper method for easier bean access from blueprint.
+	 * 
+	 * @return	This client.
+	 */
+	public FortnoxClient getThis() {
+		return this;
+	}
 	
 	/**
 	 * Gets the invoice to pay
+	 * 
+	 * @param clientSecret		The client secret
+	 * @param accessToken		The accessToken
+	 * @param invoiceRef		The actual invoice reference to look for.
+	 * @param invoiceRefType	What type of reference this is, meaning the field in the invoice where this reference is found.
+	 * 							Possible fields are: invoice or DocumentNumber (equal), ExternalInvoiceReference1,
+	 * 							ExternalInvoiceReference2, order (meaning orderNo of order existing in Fortnox), 
+	 * 							InvoiceReference, OCR, OrderReference, OurReference,
+	 * 							YourOrderNumber, YourReference
+	 * 
 	 */
 	public Invoice getInvoiceToPay(
 			@Header(value="clientSecret")String clientSecret,
@@ -456,7 +502,7 @@ public class FortnoxClient {
 		if (invoiceRef!=null && invoiceRef.trim().length()>0) {
 			// If invoice ref type is invoice no in Fortnox, there's no need 
 			// to match from order
-			if (invoiceRefType==null || invoiceRefType.equalsIgnoreCase("invoice")) {
+			if (invoiceRefType==null || invoiceRefType.equalsIgnoreCase("invoice") || invoiceRefType.equalsIgnoreCase("DocumentNumber")) {
 				
 				invoiceNo = invoiceRef;
 				
@@ -520,12 +566,13 @@ public class FortnoxClient {
 			Payment payment) throws Exception {
 		
 		bof = getFactory(accessToken, clientSecret);
+		InvoicePayment pmt = null;
 		
 		if (invoice!=null) {
 			payment.setInvoiceNo(invoice.getDocumentNumber());
 		} else {
 			log.warn("No invoice found for payment " + payment.toString());
-			return null;
+			return pmt;
 		}
 		
 		// Check invoice date. Set payment date to invoice date if payment
@@ -536,7 +583,7 @@ public class FortnoxClient {
 			payment.setPaymentDate(invoiceDate);
 		}
 		
-		InvoicePayment pmt = FortnoxConverter.toFortnoxPayment(payment);
+		pmt = FortnoxConverter.toFortnoxPayment(payment);
 		
 		// Round off if necessary (not EUR)
 		if (pmt.getCurrency()==null || !pmt.getCurrency().equals("EUR")) {
