@@ -57,7 +57,7 @@
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay/0.0.1</bundle>
+    	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>
     
     </feature>
     
