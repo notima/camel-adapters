@@ -72,7 +72,7 @@ public class FortnoxClientManager {
 		// Save to file if a file is specified
 		if (clientsFile!=null) {
 			FortnoxUtil.writeFortnoxClientListToFile(clientList, clientsFile);
-			log.info("{} file updated.");
+			log.info("{} file updated.", clientsFile);
 		} else {
 			log.warn("No FortnoxClientsFile specified. Update of orgNo {} not persisted.", ci.getOrgNo());
 		}

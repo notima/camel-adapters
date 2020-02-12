@@ -101,10 +101,10 @@ public class FortnoxClient {
 	 * 
 	 * @param accessToken
 	 * @param clientSecret
-	 * @return
+	 * @return	The current FortnoxAdapter (if none is initialized, it's initialized)
 	 * @throws Exception
 	 */
-	private FortnoxAdapter getFactory(String accessToken, String clientSecret) throws Exception {
+	public FortnoxAdapter getFortnoxAdapter(String accessToken, String clientSecret) throws Exception {
 		
 		if (lastClientSecret==null || lastAccessToken==null ||
 				!lastClientSecret.equals(clientSecret) || !lastAccessToken.equals(accessToken)
@@ -140,7 +140,7 @@ public class FortnoxClient {
 		
 		if (pt==null) return result;
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		Map<Object,Object> unposted = bof.lookupList(FortnoxAdapter.LIST_UNPOSTED);
 		
@@ -172,7 +172,7 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken,
 			@Header(value="invoiceNo")String invoiceNo) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		org.notima.api.fortnox.entities3.Invoice finvoice = (org.notima.api.fortnox.entities3.Invoice)bof.lookupNativeInvoice((String)invoiceNo);
 
@@ -193,7 +193,7 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken
 			) throws Exception {
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		CompanySetting cs = bof.getClient().getCompanySetting();
 		return cs;
@@ -236,7 +236,7 @@ public class FortnoxClient {
 		
 		if (createIfNotFound==null) createIfNotFound = Boolean.TRUE;
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		Supplier supplier = bof.getClient().getSupplierByTaxId(orgNo, true);
 		
@@ -267,7 +267,7 @@ public class FortnoxClient {
 			@Header(value="filter")String filter
 			) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		List<org.notima.api.fortnox.entities3.Invoice> result = null;
 		
@@ -330,7 +330,7 @@ public class FortnoxClient {
 				@Header(value="action")String action			
 			) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		String result = bof.getClient().invoiceGetAction(invoiceNo, action);
 		
@@ -353,7 +353,7 @@ public class FortnoxClient {
 
 			log.info("Refreshing invoiceMap. This might take some time...");
 			
-			bof = getFactory(accessToken, clientSecret);
+			bof = getFortnoxAdapter(accessToken, clientSecret);
 			
 			CompanySetting cs = bof.getClient().getCompanySetting();
 			clientName = cs.getName();
@@ -431,7 +431,7 @@ public class FortnoxClient {
 		
 		if (orderMap==null || !accessToken.equals(mapAccessToken)) {
 
-			bof = getFactory(accessToken, clientSecret);
+			bof = getFortnoxAdapter(accessToken, clientSecret);
 			
 			CompanySetting cs = bof.getClient().getCompanySetting();
 			clientName = cs.getName();
@@ -493,7 +493,7 @@ public class FortnoxClient {
 			@Header(value="invoiceRefType")String invoiceRefType,
 			@Header(value="reconciliationDate")Date reconciliationDate) throws Exception {
 
-		bof = getFactory(accessToken, clientSecret);		
+		bof = getFortnoxAdapter(accessToken, clientSecret);		
 		
 		Invoice invoice = null;
 		String invoiceNo = null;
@@ -552,9 +552,10 @@ public class FortnoxClient {
 	 * 
 	 * @param clientSecret
 	 * @param accessToken
-	 * @param modeOfPayment		Payment Method Code (ie what account is this payment made to)
-	 * @param invoice			Use this invoice reference to match the Fortnox Invoice. Not necessary if invoiceId already matches invoice id.
-	 * @param payment
+	 * @param modeOfPayment		Payment Method Code (ie what account is this payment made to, betalningsvillkor)
+	 * @param invoice			The Fortnox invoice to be paid.
+	 * @param bookkeepPayment	If false, the payments are not bookkept (only preliminary).
+	 * @param payment			The payment to be applied
 	 * @return
 	 * @throws Exception
 	 */
@@ -563,9 +564,10 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken,
 			@Header(value="modeOfPayment")String modeOfPayment,
 			@Header(value="invoice")Invoice invoice,
+			@Header(value="bookkeepPayment")Boolean bookkeepPayment,
 			Payment payment) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		InvoicePayment pmt = null;
 		
 		if (invoice!=null) {
@@ -573,6 +575,10 @@ public class FortnoxClient {
 		} else {
 			log.warn("No invoice found for payment " + payment.toString());
 			return pmt;
+		}
+		
+		if (bookkeepPayment==null) {
+			bookkeepPayment=Boolean.TRUE;
 		}
 		
 		// Check invoice date. Set payment date to invoice date if payment
@@ -627,7 +633,7 @@ public class FortnoxClient {
 		pmt = bof.getClient().setCustomerPayment(pmt);
 
 		// Book the payment directly if account and mode of payment is set.
-		if (pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
+		if (bookkeepPayment.booleanValue() && pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
 			bof.getClient().performAction(true, "invoicepayment", Integer.toString(pmt.getNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
 		}
 		
@@ -670,7 +676,7 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken,
 			Invoice invoice) throws Exception {
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		Invoice result = (Invoice)bof.persistNativeInvoice(invoice);
 		return result.getDocumentNumber();
@@ -703,7 +709,7 @@ public class FortnoxClient {
 			throw new Exception("Can't persist invoice from order. The order is either null or missing order lines");
 		}
 
-		bof = getFactory(accessToken, clientSecret);		
+		bof = getFortnoxAdapter(accessToken, clientSecret);		
 
 		if (defaultRevenueAccount!=null)
 			bof.setDefaultRevenueAccount(defaultRevenueAccount);
@@ -732,7 +738,7 @@ public class FortnoxClient {
 			@Header(value="businessPartner")org.notima.generic.businessobjects.BusinessPartner bp 
 			) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		Customer result = null;
 		if (bp.getbPartnerId()!=0) {
@@ -826,7 +832,7 @@ public class FortnoxClient {
 				(double)totalAmount,
 				description);
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
 		voucher = client.setVoucher(voucher);
@@ -883,7 +889,7 @@ public class FortnoxClient {
 				(double)vatAmount, 
 				description);
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
 		voucher = client.setVoucher(voucher);
@@ -931,7 +937,7 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken,
 			@Header(value="supplierOrgNo")String supplierOrgNo) throws Exception {
 		
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
 		Fortnox4JSettings settings = new Fortnox4JSettings(client);
 		
@@ -957,7 +963,7 @@ public class FortnoxClient {
 			@Header(value="settingKey")String settingKey, 
 			@Header(value="settingValue")String settingValue) throws Exception {
 
-		bof = getFactory(accessToken, clientSecret);
+		bof = getFortnoxAdapter(accessToken, clientSecret);
 		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
 		Fortnox4JSettings settings = new Fortnox4JSettings(client);
 		
