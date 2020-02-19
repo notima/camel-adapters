@@ -501,7 +501,7 @@ public class FortnoxClient {
 	 * 							YourOrderNumber, YourReference
 	 * 
 	 */
-	public Invoice getInvoiceToPay(
+	public synchronized Invoice getInvoiceToPay(
 			@Header(value="clientSecret")String clientSecret,
 			@Header(value="accessToken")String accessToken,
 			@Header(value="invoiceRef")String invoiceRef,
@@ -598,7 +598,7 @@ public class FortnoxClient {
 		
 		// Check invoice date. Set payment date to invoice date if payment
 		// has a date earlier than the invoice.
-		// TODO: Change to change the payment voucher after it has been accounted.
+		// If this behavior is unwanted, correct the accounting before calling payCustomerInvoice.
 		Date invoiceDate = FortnoxClient3.s_dfmt.parse(invoice.getInvoiceDate()); 
 		if (invoiceDate.after(payment.getPaymentDate())) {
 			payment.setPaymentDate(invoiceDate);
