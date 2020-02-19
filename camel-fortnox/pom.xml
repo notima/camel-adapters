@@ -45,12 +45,10 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>org.notima.camel.fortnox,
-										org.notima.businessobjects.adapter.fortnox,
-										org.notima.api.fortnox,
-										org.notima.api.fortnox.clients,
-										org.notima.api.fortnox.entities3
+						<Export-Package>
+							org.notima.camel.fortnox
 						</Export-Package>
+						<!-- 
 						<Import-Package>org.notima.generic.businessobjects,
 										org.notima.generic.businessobjects.util,
 										org.notima.generic.ifacebusinessobjects,
@@ -105,8 +103,11 @@
 										javax.security.auth,
 										javax.security.cert										
 										</Import-Package>
+						-->
+						<!-- 
 						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|camel-core|businessobjects|bankgiro-api</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
+						 -->
 					</instructions>
 				</configuration>
 			</plugin>

@@ -27,23 +27,9 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-										org.notima.generic.businessobjects,
-										org.notima.generic.businessobjects.util,
-										org.notima.generic.ifacebusinessobjects,
 										org.notima.camel.processor,
 										org.notima.camel.utils,										
-										org.notima.bg,
-										org.notima.bg.bgmax,
-										org.notima.bg.lb,
-										org.notima.tilisiirto
-										</Export-Package>
-						<Import-Package>
-										org.apache.camel,
-										org.slf4j
-						</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime;artifactId=!camel-core|log4j|slf4j*</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
-						
+						</Export-Package>
 					</instructions>
 				</configuration>
 			</plugin>

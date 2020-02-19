@@ -51,6 +51,7 @@
 										</Import-Package>
 						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api|camel-core|gson</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
+						 -->
 					</instructions>
 				</configuration>
 			</plugin>

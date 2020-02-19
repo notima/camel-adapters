@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.6.0" name="camel-utils">
 
+	<repository>mvn:org.apache.camel.karaf/apache-camel/2.24.3/xml/features</repository>
+
 	<feature name="notima-common" description="Notima Common Dependencies" version="${project.version}">
 	
 		<feature>camel-core</feature>
 		<feature>camel-blueprint</feature>
 		<feature>camel-quartz2</feature>
 		<feature>camel-jaxb</feature>
-        <bundle>mvn:com.google.code.gson/gson/2.8.1</bundle>
+		<bundle>mvn:com.google.code.gson/gson/2.8.1</bundle>
         <bundle>mvn:org.slf4j/slf4j-api/1.7.29</bundle>
         <bundle>mvn:org.slf4j/slf4j-log4j12/1.7.29</bundle>
         <bundle>mvn:log4j/log4j/1.2.17</bundle>
+        
         <!-- 
         <bundle>mvn:com.sun.xml.bind/jaxb-core/2.3.0.1</bundle>
         <bundle>mvn:com.sun.xml.bind/jaxb-impl/2.3.1</bundle>
@@ -20,18 +23,19 @@
 	</feature>
 
 	<feature name="notima-businessobjects" description="Notima Business Objects" version="${project.version}">
+		<!-- 
         <feature prerequisite="true" dependency="false">wrap</feature>
+         -->
         <feature>notima-common</feature>
-		<bundle>wrap:mvn:org.notima.bg/bankgiro-api/1.3.6</bundle>
-		<bundle>wrap:mvn:org.notima.generic/businessobjects/0.1.15</bundle>
-	
+		<bundle>mvn:org.notima.bg/bankgiro-api/1.3.7</bundle>
+		<bundle>mvn:org.notima.generic/businessobjects/0.1.16</bundle>
 	</feature>
-
 
 	<feature name="camel-ubl" description="UBL for Camel" version="${project.version}">
 
         <feature>notima-businessobjects</feature>	
         <bundle>mvn:org.generic.businessobjects.adapter/ublAdapter/0.0.1</bundle>
+        <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-ubl</bundle>
         
         <config name="camel-ubl-settings">
@@ -44,9 +48,13 @@
     <feature name="camel-fortnox4j" description="Fortnox4J For Camel" version="${project.version}">
         <feature prerequisite="true" dependency="false">wrap</feature>
         <feature>notima-businessobjects</feature>
-        <bundle>wrap:mvn:org.hamcrest/hamcrest-core/1.3</bundle>
+		<!--         <bundle>wrap:mvn:org.hamcrest/hamcrest-core/1.3</bundle>  -->
         <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/4.4.12</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/4.5.10</bundle>
+        <bundle>mvn:org.notima/piggyback-tools/0.0.2</bundle>
+        <bundle>mvn:org.notima.api/fortnox4j/1.8.9-SNAPSHOT</bundle>
+        <bundle>mvn:org.notima.generic.businessobjects.adapter/fortnoxAdapter/1.0.2-SNAPSHOT</bundle>
+        <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-fortnox</bundle>
 
         <config name="FortnoxProperties">
@@ -58,6 +66,7 @@
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
+    	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>
     
     </feature>

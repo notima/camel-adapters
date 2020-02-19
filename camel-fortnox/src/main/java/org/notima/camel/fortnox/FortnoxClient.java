@@ -75,14 +75,16 @@ public class FortnoxClient {
 	
 
 	/**
-	 * Gets access token if possible
+	 * Retrieves access token if possible
+	 * NOTE!! Don't use this method unless you save the access token. If you loose the return value
+	 * you'll have to create a new API-code.
 	 * 
-	 * @param clientSecret
-	 * @param apiCode
-	 * @return
-	 * @throws Exception
+	 * @param 	clientSecret
+	 * @param 	apiCode
+	 * @return	The access token.
+	 * @throws Exception	If something goes wrong.
 	 */
-	public String getAccessToken(
+	public String retrieveAccessTokenFromApiCode(
 			@Header(value="clientSecret")String clientSecret, 
 			@Header(value="apiCode")String apiCode) throws Exception {
 		
@@ -94,6 +96,19 @@ public class FortnoxClient {
 		
 		return accessToken;
 		
+	}
+
+	/**
+	 * Return true if the given parameter is equal to the last access token used.
+	 * 
+	 * @param accessToken
+	 * @return	True if accesstoken hasn't changed.
+	 */
+	public boolean isLastAccessToken(String accessToken) {
+		if (accessToken==null || lastAccessToken==null)
+			return false;
+		
+		return accessToken.equals(lastAccessToken);
 	}
 	
 	/**
