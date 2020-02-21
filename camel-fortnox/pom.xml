@@ -135,7 +135,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>fortnoxAdapter</artifactId>
-  		<version>1.0.2-SNAPSHOT</version>
+  		<version>1.8.9-SNAPSHOT</version>
   	</dependency>
   	
   	

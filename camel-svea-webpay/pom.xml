@@ -25,10 +25,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>com.svea.businessobjects,
-										com.svea.businessobjects.pmtadmin,
-										com.svea.businessobjects.sveaadmin,
-										com.svea.webpay.common.auth,
+						<Export-Package>com.svea.webpay.common.auth,
 										com.svea.webpay.common.conv,
 										com.svea.webpay.common.reconciliation,
 										com.svea.webpay.common.reconciliation.conv,
@@ -38,7 +35,11 @@
 						<Private-Package>
 							com.svea.webpayadminservice.*
 						</Private-Package>
-						<Import-Package>org.notima.generic.businessobjects,
+						<Import-Package>
+										com.svea.businessobjects,
+										com.svea.businessobjects.pmtadmin,
+										com.svea.businessobjects.sveaadmin,
+										org.notima.generic.businessobjects,
 										org.notima.generic.businessobjects.util,
 										org.notima.generic.ifacebusinessobjects,
 										org.slf4j,
@@ -49,7 +50,7 @@
 										org.apache.camel,
 										com.google.gson										
 										</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api|camel-core|gson</Embed-Dependency>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api|camel-core|gson|sveaWebpayAdapter</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						 -->
 					</instructions>
@@ -64,7 +65,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>sveaWebpayAdapter</artifactId>
-  		<version>0.0.4</version>
+  		<version>1.8.9-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
