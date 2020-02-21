@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.notima.camel-adapters</groupId>
+    <artifactId>camel-adapters</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+  </parent>
+  <artifactId>camel-infometric</artifactId>
+  <name>Infometric Camel Adapter</name>
+  <description>Converts infometric data.</description>
+  
+  <packaging>bundle</packaging>  
+  <build>
+
+		
+		<plugins>
+		
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>4.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>
+							org.notima.camel.infometric
+						</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+  
+  </build>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.notima.generic.businessobjects</groupId>
+  		<artifactId>infometricAdapter</artifactId>
+  		<version>1.8.9-SNAPSHOT</version>
+  	</dependency>
+  	
+  </dependencies>  
+  
+</project>

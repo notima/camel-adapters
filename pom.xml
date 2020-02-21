@@ -25,6 +25,7 @@
 		<module>camel-utils</module>
 		<module>camel-ubl</module>
 		<module>camel-feature</module>
+		<module>camel-infometric</module>
 	</modules>
 
 	<build>

@@ -29,7 +29,7 @@
          -->
         <feature>notima-common</feature>
 		<bundle>mvn:org.notima.bg/bankgiro-api/1.3.7</bundle>
-		<bundle>mvn:org.notima.generic/businessobjects/0.1.16</bundle>
+		<bundle>mvn:org.notima.generic/businessobjects/0.1.17</bundle>
 	</feature>
 
 	<feature name="camel-ubl" description="UBL for Camel" version="${project.version}">
@@ -76,7 +76,7 @@
     <feature name="camel-infometric" description="Infometric for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.generic.businessobjects.adapter/infometricAdapter/1.8.9-SNAPSHOT</bundle>
+    	<bundle>mvn:org.notima.generic.businessobjects/infometricAdapter/1.8.9-SNAPSHOT</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-infometric</bundle>
     
