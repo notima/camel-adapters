@@ -13,11 +13,6 @@
   
 		<plugins>
 		
-			<!-- 
-				OSGI-bundle packaging plugin
-			
-				 mvn -DskipTests install 
-			-->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -25,34 +20,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>com.svea.webpay.common.auth,
-										com.svea.webpay.common.conv,
-										com.svea.webpay.common.reconciliation,
-										com.svea.webpay.common.reconciliation.conv,
-										com.svea.webpayadmin,
-										com.svea.webpayadmin.report
+						<Export-Package>
+							org.notima.camel.sveawebpay
 						</Export-Package>
-						<Private-Package>
-							com.svea.webpayadminservice.*
-						</Private-Package>
-						<Import-Package>
-										com.svea.businessobjects,
-										com.svea.businessobjects.pmtadmin,
-										com.svea.businessobjects.sveaadmin,
-										org.notima.generic.businessobjects,
-										org.notima.generic.businessobjects.util,
-										org.notima.generic.ifacebusinessobjects,
-										org.slf4j,
-										org.notima.bg,
-										org.notima.bg.bgmax,
-										org.notima.bg.lb,
-										org.notima.tilisiirto,
-										org.apache.camel,
-										com.google.gson										
-										</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|businessobjects|bankgiro-api|camel-core|gson|sveaWebpayAdapter</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
-						 -->
 					</instructions>
 				</configuration>
 			</plugin>
