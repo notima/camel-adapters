@@ -35,7 +35,7 @@
 	<feature name="camel-ubl" description="UBL for Camel" version="${project.version}">
 
         <feature>notima-businessobjects</feature>	
-        <bundle>mvn:org.generic.businessobjects.adapter/ublAdapter/1.8.9-SNAPSHOT</bundle>
+        <bundle>mvn:org.notima.generic.businessobjects.adapter/ublAdapter/1.8.9</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-ubl</bundle>
         
@@ -53,8 +53,8 @@
         <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/4.4.12</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/4.5.10</bundle>
         <bundle>mvn:org.notima/piggyback-tools/0.0.2</bundle>
-        <bundle>mvn:org.notima.api/fortnox4j/1.8.9-SNAPSHOT</bundle>
-        <bundle>mvn:org.notima.generic.businessobjects.adapter/fortnoxAdapter/1.8.9-SNAPSHOT</bundle>
+        <bundle>mvn:org.notima.api/fortnox4j/1.8.9</bundle>
+        <bundle>mvn:org.notima.generic.businessobjects.adapter/fortnoxAdapter/1.8.9</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-fortnox</bundle>
 
@@ -67,7 +67,7 @@
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/1.8.9-SNAPSHOT</bundle>
+    	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/1.8.9</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>
     
@@ -76,7 +76,7 @@
     <feature name="camel-infometric" description="Infometric for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.generic.businessobjects/infometricAdapter/1.8.9-SNAPSHOT</bundle>
+    	<bundle>mvn:org.notima.generic.businessobjects.adapter/infometricAdapter/1.8.9</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-infometric</bundle>
     

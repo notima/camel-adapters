@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
   <artifactId>camel-fortnox</artifactId>
   <name>Fortnox Camel Adapter</name>
@@ -31,13 +31,6 @@
 		
 		<plugins>
 		
-			<!-- 
-				OSGI-bundle packaging plugin
-			
-				 mvn org.apache.felix:maven-bundle-plugin:bundle
-				 mvn install org.apache.felix:maven-bundle-plugin:bundle bundle:install-file
-				 mvn -DskipTests install bundle:install 
-			-->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -48,66 +41,6 @@
 						<Export-Package>
 							org.notima.camel.fortnox
 						</Export-Package>
-						<!-- 
-						<Import-Package>org.notima.generic.businessobjects,
-										org.notima.generic.businessobjects.util,
-										org.notima.generic.ifacebusinessobjects,
-										org.slf4j,
-										org.notima.bg,
-										org.notima.bg.bgmax,
-										org.notima.bg.lb,
-										org.notima.tilisiirto,
-										org.apache.camel,
-										javax.xml.bind,
-										javax.net.ssl,
-										javax.net,
-										javax.naming,
-										javax.security.auth.x500,
-										javax.naming.ldap,
-										javax.naming.directory,
-										javax.activation,
-										javax.annotation,
-										javax.crypto,
-										javax.crypto.spec,
-										javax.imageio,
-										javax.imageio.stream,
-										javax.lang.model,
-										javax.management,
-										javax.management.modelmbean,
-										javax.management.openmbean,
-										javax.management.remote,
-										javax.naming.spi,
-										javax.xml.bind.annotation,
-										javax.xml.bind.annotation.adapters,
-										javax.xml.bind.attachment,
-										javax.xml.bind.helpers,
-										javax.xml.datatype,javax.xml.namespace,
-										javax.xml.parsers,
-										javax.xml.stream,
-										javax.xml.stream.events,
-										javax.xml.transform,
-										javax.xml.transform.dom,
-										javax.xml.transform.sax,
-										javax.xml.transform.stax,
-										javax.xml.transform.stream,
-										javax.xml.validation,
-										javax.xml.xpath,
-										org.osgi.framework,
-										org.osgi.framework.wiring,
-										org.w3c.dom,
-										org.w3c.dom.ls,
-										org.xml.sax,
-										org.xml.sax.ext,
-										org.xml.sax.helpers,
-										sun.misc,
-										javax.security.auth,
-										javax.security.cert										
-										</Import-Package>
-						-->
-						<!-- 
-						<Embed-Dependency>*;scope=compile|runtime;artifactId=!slf4j-api|slf4j-log4j12|log4j|camel-core|businessobjects|bankgiro-api</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
-						 -->
 					</instructions>
 				</configuration>
 			</plugin>
@@ -135,7 +68,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>fortnoxAdapter</artifactId>
-  		<version>1.8.9-SNAPSHOT</version>
+  		<version>1.8.9</version>
   	</dependency>
   	
   	

@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
   <artifactId>camel-svea-webpay</artifactId>
   <name>Svea Webpay Camel Adapter</name>
@@ -35,7 +35,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>sveaWebpayAdapter</artifactId>
-  		<version>1.8.9-SNAPSHOT</version>
+  		<version>1.8.9</version>
   	</dependency>
   </dependencies>
 </project>
