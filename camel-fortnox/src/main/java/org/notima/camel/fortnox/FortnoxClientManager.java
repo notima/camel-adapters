@@ -82,7 +82,7 @@ public class FortnoxClientManager {
 	}
 
 	/**
-	 * Reads clients from xml-file.
+	 * Reads clients from xml-file and sets the clients file.
 	 * 
 	 * @param fortnoxClientsFile	Path to XML file. Can be in classpath.
 	 * @return	True if clients where read.
@@ -110,6 +110,11 @@ public class FortnoxClientManager {
 		return clientsFile;
 	}
 
+	/**
+	 * Sets the clients file property (doesn't read the file).
+	 * 
+	 * @param clientsFile
+	 */
 	public void setClientsFile(String clientsFile) {
 		this.clientsFile = clientsFile;
 	}
