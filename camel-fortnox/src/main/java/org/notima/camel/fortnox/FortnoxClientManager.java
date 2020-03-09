@@ -11,6 +11,7 @@ import org.notima.api.fortnox.clients.FortnoxApiClient;
 import org.notima.api.fortnox.clients.FortnoxClientInfo;
 import org.notima.api.fortnox.clients.FortnoxClientList;
 import org.notima.api.fortnox.clients.ListOfClientInfo;
+import org.notima.api.fortnox.entities3.CompanySetting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,10 @@ public class FortnoxClientManager {
 			// Update existing
 			dst.setAccessToken(ci.getAccessToken());
 			dst.setClientSecret(ci.getClientSecret());
+		}
+		CompanySetting cs = ci.getCompanySetting();
+		if (cs!=null) {
+			dst.setOrgName(cs.getName());
 		}
 		
 		// Save to file if a file is specified

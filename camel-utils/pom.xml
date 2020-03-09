@@ -3,7 +3,8 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.3</version>
+    <version>${parent.version}</version>
+    <relativePath>..</relativePath>
   </parent>
   <artifactId>camel-utils</artifactId>
   <name>Notima Camel Utilities</name>
