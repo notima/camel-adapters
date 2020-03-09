@@ -399,7 +399,7 @@ public class FortnoxClient {
 			Invoice i;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
-				if ("yourOrderNumber".equalsIgnoreCase(referenceField)) {
+				if ("YourOrderNumber".equalsIgnoreCase(referenceField)) {
 					invoiceMap.put(i.getYourOrderNumber(), i);
 				} else if ("ExternalInvoiceReference1".equalsIgnoreCase(referenceField)) {
 					invoiceMap.put(ii.getExternalInvoiceReference1(), i);
