@@ -35,7 +35,7 @@
   	<dependency>
   		<groupId>org.notima.generic.businessobjects.adapter</groupId>
   		<artifactId>sveaWebpayAdapter</artifactId>
-  		<version>1.8.9</version>
+  		<version>${businessadapters.version}</version>
   	</dependency>
   </dependencies>
 </project>

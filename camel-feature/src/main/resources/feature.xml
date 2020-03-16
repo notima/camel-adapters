@@ -29,13 +29,13 @@
          -->
         <feature>notima-common</feature>
 		<bundle>mvn:org.notima.bg/bankgiro-api/1.3.7</bundle>
-		<bundle>mvn:org.notima.generic/businessobjects/0.1.17</bundle>
+		<bundle>mvn:org.notima.generic/businessobjects/0.1.18-SNAPSHOT</bundle>
 	</feature>
 
 	<feature name="camel-ubl" description="UBL for Camel" version="${project.version}">
 
         <feature>notima-businessobjects</feature>	
-        <bundle>mvn:org.notima.generic.businessobjects.adapter/ublAdapter/1.8.9</bundle>
+        <bundle>mvn:org.notima.generic.businessobjects.adapter/ublAdapter/${businessadapters.version}</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-ubl</bundle>
         
@@ -49,12 +49,11 @@
     <feature name="camel-fortnox4j" description="Fortnox4J For Camel" version="${project.version}">
         <feature prerequisite="true" dependency="false">wrap</feature>
         <feature>notima-businessobjects</feature>
-		<!--         <bundle>wrap:mvn:org.hamcrest/hamcrest-core/1.3</bundle>  -->
         <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/4.4.12</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/4.5.10</bundle>
         <bundle>mvn:org.notima/piggyback-tools/0.0.2</bundle>
-        <bundle>mvn:org.notima.api/fortnox4j/1.8.9</bundle>
-        <bundle>mvn:org.notima.generic.businessobjects.adapter/fortnoxAdapter/1.8.9</bundle>
+        <bundle>mvn:org.notima.api/fortnox4j/1.8.10-SNAPSHOT</bundle>
+        <bundle>mvn:org.notima.generic.businessobjects.adapter/fortnoxAdapter/${businessadapters.version}</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
         <bundle>mvn:org.notima.camel-adapters/camel-fortnox</bundle>
 
@@ -67,7 +66,7 @@
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/1.8.9</bundle>
+    	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/${businessadapters.version}</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>
     
@@ -76,7 +75,7 @@
     <feature name="camel-infometric" description="Infometric for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
-    	<bundle>mvn:org.notima.generic.businessobjects.adapter/infometricAdapter/1.8.9</bundle>
+    	<bundle>mvn:org.notima.generic.businessobjects.adapter/infometricAdapter/${businessadapters.version}</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-infometric</bundle>
     
