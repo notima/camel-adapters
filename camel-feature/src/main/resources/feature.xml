@@ -11,9 +11,11 @@
 		<feature>camel-jaxb</feature>
 		<feature>camel-csv</feature>
 		<bundle>mvn:com.google.code.gson/gson/2.8.1</bundle>
+		<!-- 
         <bundle>mvn:org.slf4j/slf4j-api/1.7.29</bundle>
         <bundle>mvn:org.slf4j/slf4j-log4j12/1.7.29</bundle>
         <bundle>mvn:log4j/log4j/1.2.17</bundle>
+         -->
         
         <!-- 
         <bundle>mvn:com.sun.xml.bind/jaxb-core/2.3.0.1</bundle>
@@ -66,6 +68,7 @@
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
     
     	<feature>notima-businessobjects</feature>
+    	<bundle>mvn:com.svea/webpayadminservice-client</bundle>
     	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/${businessadapters.version}</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>

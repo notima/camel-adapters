@@ -23,6 +23,10 @@
 						<Export-Package>
 							org.notima.camel.sveawebpay
 						</Export-Package>
+						<Import-Package>
+							com.svea.businessobjects.sveaadmin,
+							*
+						</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
