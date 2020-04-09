@@ -140,6 +140,14 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+      
+      <dependency>
+    	<groupId>org.notima.generic.businessobjects.adapter</groupId>
+    	<artifactId>businessObjectAdapters</artifactId>
+    	<version>${businessadapters.version}</version>
+    	<scope>import</scope>
+    	<type>pom</type>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
