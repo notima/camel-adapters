@@ -70,6 +70,7 @@
     	<feature>notima-businessobjects</feature>
     	<bundle>mvn:org.notima.api.webpay/pmt-admin-api</bundle>
     	<bundle>mvn:com.svea/webpayadminservice-client</bundle>
+		<bundle>mvn:org.notima.generic.businessobjects.adapter/csvAdapter/${businessadapters.version}</bundle>
     	<bundle>mvn:org.notima.generic.businessobjects.adapter/sveaWebpayAdapter/${businessadapters.version}</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
     	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>

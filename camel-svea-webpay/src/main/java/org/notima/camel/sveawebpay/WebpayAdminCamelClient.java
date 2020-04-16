@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.camel.Header;
+import org.notima.api.webpay.pmtapi.PmtApiClientRF;
+import org.notima.generic.businessobjects.Invoice;
 import org.notima.generic.businessobjects.Order;
 import org.notima.generic.businessobjects.Payment;
 
@@ -27,8 +29,6 @@ import com.svea.webpayadminservice.client.CreateOrderRequest;
 import com.svea.webpayadminservice.client.CreateOrderResponse2;
 import com.svea.webpayadminservice.client.DeliveryResponse;
 import com.svea.webpayadminservice.client.OrderType;
-
-import org.notima.api.webpay.pmtapi.PmtApiClientRF;
 
 /**
  * Class for accessing Svea Webpay APIs using camel.
@@ -304,6 +304,25 @@ public class WebpayAdminCamelClient {
 		
 	}
 
+	public Invoice<?> getInvoice(String accountNo, String invoiceNo) throws Exception {
+		
+		Invoice<?> result = null;
+		
+		SveaCredential cr = getCredentialFromAccountNo(accountNo);
+		
+		if (cr!=null) {
+
+			SveaAdminBusinessObjectFactory bo = new SveaAdminBusinessObjectFactory();
+			bo.initCredentials(cr);
+			
+			result = bo.lookupInvoice(invoiceNo);
+			
+		}
+		
+		return result;
+		
+	}
+	
 	/**
 	 * Returns order data given Svea's order id.
 	 * 
@@ -312,11 +331,11 @@ public class WebpayAdminCamelClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public Order getOrder(
+	public Order<?> getOrder(
 			@Header(value="accountNo")String accountNo,
 			@Header(value="orderId")String orderId) throws Exception {
 
-		Order result = null;
+		Order<?> result = null;
 		
 		SveaCredential cr = getCredentialFromAccountNo(accountNo);
 		if (cr!=null) {
