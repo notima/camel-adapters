@@ -14,6 +14,7 @@ import org.notima.generic.businessobjects.Invoice;
 import org.notima.generic.businessobjects.Order;
 import org.notima.generic.businessobjects.Payment;
 
+import com.svea.businessobjects.paymentgw.SveaPmtGwBusinessObjectFactory;
 import com.svea.businessobjects.pmtadmin.SveaPmtAdminBusinessObjectFactory;
 import com.svea.businessobjects.sveaadmin.SveaAdminBusinessObjectFactory;
 import com.svea.businessobjects.sveaadmin.SveaAdminConverter;
@@ -394,6 +395,24 @@ public class WebpayAdminCamelClient {
 		return result;
 	}
 	
+	/**
+	 * Returns order data given checkout order id
+	 */
+	public Order getOrderByTransactionId(@Header(value="accountNo")String accountNo, 
+			@Header(value="transactionId")String transactionId
+			) throws Exception {
+		
+		SveaPmtGwBusinessObjectFactory sof = new SveaPmtGwBusinessObjectFactory();
+		SveaCredential cr = getCredentialFromAccountNo(accountNo);
+		if (cr==null || cr.getCardMerchantId()==null) throw new Exception("No credentials configured for fetching orders using transactionId.");
+		sof.init(Integer.parseInt(cr.getCardMerchantId()), cr.getCardSecretWord());
+
+		Order result = sof.lookupOrder(transactionId);
+		
+		return result;
+	}
+	
+	
 	
 	/**
 	 * Creates and order from an OrderInvoice object.
@@ -630,7 +649,7 @@ public class WebpayAdminCamelClient {
 		
 		reportFactory.setCredentials(credentials);
 		
-		reportFactory.initClients();
+		reportFactory.initClients(false);
 		
 		reportFactory.setFromDate(fromDate);
 		reportFactory.setUntilDate(untilDate);
