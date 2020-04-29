@@ -329,12 +329,14 @@ public class WebpayAdminCamelClient {
 	 * 
 	 * @param accountNo		- Client ID
 	 * @param orderId
+	 * @param includeCancelledRows - If set to true, include cancelled rows.
 	 * @return
 	 * @throws Exception
 	 */
 	public Order<?> getOrder(
 			@Header(value="accountNo")String accountNo,
-			@Header(value="orderId")String orderId) throws Exception {
+			@Header(value="orderId")String orderId,
+			@Header(value="includeCancelledRows")Boolean includeCancelledRows) throws Exception {
 
 		Order<?> result = null;
 		
@@ -342,6 +344,9 @@ public class WebpayAdminCamelClient {
 		if (cr!=null) {
 
 			SveaAdminBusinessObjectFactory bo = new SveaAdminBusinessObjectFactory();
+			if (includeCancelledRows!=null) {
+				bo.setSetting(SveaAdminBusinessObjectFactory.SETTING_INCLUDE_CANCELLED_ROWS, includeCancelledRows.toString());
+			}
 			bo.initCredentials(cr);
 			
 			result = bo.lookupOrder(orderId);
