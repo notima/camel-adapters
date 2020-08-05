@@ -12,14 +12,14 @@
 		<feature>camel-jaxb</feature>
 		<feature>camel-csv</feature>
         <bundle>mvn:javax.persistence/javax.persistence-api/2.2</bundle>
-      	<bundle>mvn:org.notima.camel-adapters/camel-utils</bundle>
+      	<bundle>mvn:org.notima.camel-adapters/camel-utils/${project.version}</bundle>
 	
 	</feature>
 
 	<feature name="camel-ubl" description="UBL for Camel" version="${project.version}">
 		<feature>camel-notima-common</feature>
         <feature>notima-ubl</feature>	
-        <bundle>mvn:org.notima.camel-adapters/camel-ubl</bundle>
+        <bundle>mvn:org.notima.camel-adapters/camel-ubl/${project.version}</bundle>
         
         <config name="camel-ubl-settings">
         	# Default output directory for generated xml-files.
@@ -32,20 +32,20 @@
         <feature prerequisite="true" dependency="false">wrap</feature>
 		<feature>camel-notima-common</feature>
         <feature>notima-fortnox4j</feature>
-        <bundle>mvn:org.notima.camel-adapters/camel-fortnox</bundle>
+        <bundle>mvn:org.notima.camel-adapters/camel-fortnox/${project.version}</bundle>
     </feature>
     
     <feature name="camel-sveawebpay" description="SveaWebPay for Camel" version="${project.version}">
 		<feature>camel-notima-common</feature>
     	<feature>notima-sveawebpay</feature>
-    	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay</bundle>
+    	<bundle>mvn:org.notima.camel-adapters/camel-svea-webpay/${project.version}</bundle>
     
     </feature>
     
     <feature name="camel-infometric" description="Infometric for Camel" version="${project.version}">
 		<feature>camel-notima-common</feature>
     	<feature>notima-infometric</feature>
-    	<bundle>mvn:org.notima.camel-adapters/camel-infometric</bundle>
+    	<bundle>mvn:org.notima.camel-adapters/camel-infometric/${project.version}</bundle>
     
     </feature>
     
