@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.6.0" name="camel-notima-utils">
 
-	<repository>mvn:org.apache.camel.karaf/apache-camel/2.24.3/xml/features</repository>
+	<repository>mvn:org.apache.camel.karaf/apache-camel/${camel.version}/xml/features</repository>
 	<repository>mvn:org.notima.generic.businessobjects.adapter/adapterTools/${businessadapters.version}/xml/features</repository>
 
 	<feature name="camel-notima-common" description="Notima Camel Common Dependencies" version="${project.version}">
