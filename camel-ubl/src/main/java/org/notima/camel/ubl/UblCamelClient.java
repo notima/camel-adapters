@@ -33,6 +33,28 @@ public class UblCamelClient {
 	}
 	
 	/**
+	 * Adds GLN to an invoice
+	 * 
+	 * @param gln
+	 * @param dst
+	 * @return
+	 */
+	public InvoiceType addGlnRecipient(@Header("glnRecipient")String gln, @Body InvoiceType dst) {
+		
+		if (dst==null) {
+			System.err.println("NOOOOOO INVOICE");
+			return null;
+		}
+
+		if (gln==null || gln.trim().length()==0)
+			return dst;
+		
+		UBL21Converter.setGLNNumber(dst, gln);
+		return dst;
+		
+	}
+	
+	/**
 	 * Adds payment means bankgiro number from header bgRecipientNo
 	 * 
 	 * @param bg
