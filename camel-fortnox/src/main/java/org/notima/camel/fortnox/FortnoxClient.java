@@ -648,7 +648,7 @@ public class FortnoxClient {
 		pmt = bof.getClient().setCustomerPayment(pmt);
 
 		// Book the payment directly if account and mode of payment is set.
-		if (bookkeepPayment.booleanValue() && pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
+		if (bookkeepPayment.booleanValue() && pmt!=null && pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
 			bof.getClient().performAction(true, "invoicepayment", Integer.toString(pmt.getNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
 		}
 		
