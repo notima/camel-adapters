@@ -39,6 +39,7 @@
 						</Export-Package>
 						<Import-Package>org.notima.generic.ubl.factory,
 										org.apache.camel,
+										org.notima.bg,
 										org.notima.generic.businessobjects,
 										org.notima.generic.businessobjects.util,
 										org.notima.generic.ifacebusinessobjects,

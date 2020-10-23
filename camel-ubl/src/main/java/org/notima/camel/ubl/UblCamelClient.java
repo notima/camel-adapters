@@ -5,6 +5,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
+import org.notima.bg.BgUtil;
 import org.notima.generic.businessobjects.Invoice;
 import org.notima.generic.ubl.factory.UBL21Converter;
 
@@ -80,8 +81,11 @@ public class UblCamelClient {
 		
 		String invoiceRef = dst.getIDValue();
 		
-		if ("fakt30d".equals(paymentTerm)) {
-			invoiceRef = invoicePrefix + factoringInvoiceNo;
+		// TODO: This must be customizable
+		if ("faktSveaFtg".equals(paymentTerm)) {
+			// Get first 5 digits of invoice prefix and add invoice no to the end.
+			String OCRsource = invoicePrefix.substring(0, 5) + BgUtil.fillToLength(factoringInvoiceNo, true, '0', 10);
+			invoiceRef = BgUtil.toOCRNumberWithLengthCheck(OCRsource);
 			dst.setID(invoiceRef);
 		}
 		
