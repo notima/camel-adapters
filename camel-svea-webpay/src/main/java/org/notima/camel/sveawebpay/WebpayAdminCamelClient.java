@@ -384,14 +384,18 @@ public class WebpayAdminCamelClient {
 	
 	
 	/**
-	 * Returns order data given checkout order id
+	 * Returns order data given checkout order id.
+	 * 
+	 * @param	accountNo			Can be null, but if there are many merchantIds on the same orgNo, it should be set.
+	 * @param 	checkoutOrderId		The checkout orderId to lookup.
 	 */
 	public Order getOrderByCheckoutOrderId(
+			@Header(value="accountNo")String accountNo,
 			@Header(value="checkoutOrderId")String checkoutOrderId
 			) throws Exception {
 		
 		SveaPmtAdminBusinessObjectFactory sof = new SveaPmtAdminBusinessObjectFactory();
-		SveaCredential cr = getCheckoutCredential();
+		SveaCredential cr = getCheckoutCredential(accountNo);
 		if (cr==null) throw new Exception("No credentials configured for fetching orders using checkoutOrderId.");
 		sof.init(cr.getServer(), cr.getMerchantId(), cr.getSecretWord());
 
@@ -481,10 +485,44 @@ public class WebpayAdminCamelClient {
 	
 	
 	/**
+	 * Return the checkout credential that has a specified merchant id 
+	 * 
+	 * @param 		merchantId	The merchantId
+	 * @return		A checkout credential with specified merchant id. Null if not found.
+	 */
+	public SveaCredential getCheckoutCredential(Long merchantId) {
+		
+		if (merchantId!=null) {
+			for (SveaCredential cr : credentials) {
+				if (cr.getMerchantId()!=null && Long.parseLong(cr.getMerchantId()) == merchantId) {
+					return cr;
+				}
+			}
+		} else {
+			// Merchant id is null, return first found
+			return getCheckoutCredential((String)null);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @param	accountNo		AccountNo if there are many merchantIds to choose from. Can be null.
 	 * 
 	 * @return	Returns checkout credentials (if they exist)
 	 */
-	public SveaCredential getCheckoutCredential() {
+	public SveaCredential getCheckoutCredential(String accountNo) {
+		
+		// If specified on account, use that
+		if (accountNo!=null) {
+			for (SveaCredential cr : credentials) {
+				if (cr.getAccountNo().equals(accountNo) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
+					return cr;
+				}
+			}
+		}
+		
+		// If not found on specified account, try any
 		for (SveaCredential cr : credentials) {
 			if (cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
 				return cr;
@@ -494,10 +532,12 @@ public class WebpayAdminCamelClient {
 	}
 	
 	/**
+	 * @param	accountNo	AccountNo if there are many merchantIds to choose from. Can be null.
+	 * 
 	 * @return	Returns card merchant ID. NOTE! The card merchant ID must be defined in the same credential as the merchant ID.
 	 */
-	public String	getCardMerchantId() {
-		SveaCredential cr = getCheckoutCredential();
+	public String	getCardMerchantId(String accountNo) {
+		SveaCredential cr = getCheckoutCredential(accountNo);
 		if (cr!=null)
 			return cr.getCardMerchantId();
 		else 
@@ -508,18 +548,19 @@ public class WebpayAdminCamelClient {
 	/**
 	 * Delivers checkout order
 	 * 
+	 * @param merchantId			The merchantId that the checkout order belongs to (can be null).
 	 * @param checkoutOrderNo		The checkout order to deliver.
-	 * @return
+	 * @return						Status of order delivered.
 	 * @throws Exception
 	 */
-	public String deliverCheckoutOrder(String checkoutOrderNo) throws Exception {
+	public String deliverCheckoutOrder(Long merchantId, String checkoutOrderNo) throws Exception {
 		
-		if (credentials==null || getCheckoutCredential()==null) throw new Exception("No checkout credential");
+		if (credentials==null || getCheckoutCredential(merchantId)==null) throw new Exception("No checkout credential");
 		
 		PmtApiClientRF client = new PmtApiClientRF();
 		
 		// Find the credential for checkout
-		SveaCredential cr = getCheckoutCredential();
+		SveaCredential cr = getCheckoutCredential(merchantId);
 		client.init(cr.getServer(), cr.getMerchantId(), cr.getSecretWord());
 		
 		String result = client.deliverCompleteOrder(Long.parseLong(checkoutOrderNo));
