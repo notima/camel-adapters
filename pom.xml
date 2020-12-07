@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.notima.camel-adapters</groupId>
 	<artifactId>camel-adapters</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<packaging>pom</packaging>
 	<name>Notima Camel Adapters</name>
 
@@ -17,8 +17,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<revision>0.0.4-SNAPSHOT</revision>
-		<businessadapters.version>1.8.10-SNAPSHOT</businessadapters.version>
+		<revision>0.0.4</revision>
+		<businessadapters.version>1.8.10</businessadapters.version>
 		<camel.version>2.25.2</camel.version>
 	</properties>
 
@@ -137,7 +137,7 @@
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-core</artifactId>
-        <version>2.24.3</version>
+        <version>${camel.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
