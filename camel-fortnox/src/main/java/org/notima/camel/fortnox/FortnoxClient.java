@@ -397,24 +397,32 @@ public class FortnoxClient {
 			int invoiceCount = 0;
 			
 			Invoice i;
+			String refInFortnox = null;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
 				if ("YourOrderNumber".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getYourOrderNumber(), i);
+					refInFortnox = i.getYourOrderNumber();
 				} else if ("ExternalInvoiceReference1".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(ii.getExternalInvoiceReference1(), i);
+					refInFortnox = ii.getExternalInvoiceReference1();
 				} else if ("ExternalInvoiceReference2".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(ii.getExternalInvoiceReference2(), i);
+					refInFortnox = ii.getExternalInvoiceReference2();
 				} else if ("InvoiceReference".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getInvoiceReference(), i);
+					refInFortnox = i.getInvoiceReference();
 				} else if ("OCR".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getOCR(), i);
+					refInFortnox = i.getOCR();
 				} else if ("OrderReference".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getOrderReference(), i);
+					refInFortnox = i.getOrderReference();
 				} else if ("OurReference".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getOurReference(), i);
+					refInFortnox = i.getOurReference();
 				} else if ("YourReference".equalsIgnoreCase(referenceField)) {
-					invoiceMap.put(i.getYourReference(), i);
+					refInFortnox = i.getYourReference();
+				}
+				
+				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
+					// TODO: Handle if there are multiple invoices with the same reference.
+					invoiceMap.put(refInFortnox.trim(), i);
+				} else {
+					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no reference in [" + referenceField + "].");
 				}
 				
 				invoiceCount++;
