@@ -397,6 +397,7 @@ public class FortnoxClient {
 			int invoiceCount = 0;
 			
 			Invoice i;
+			Invoice existing = null;
 			String refInFortnox = null;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
@@ -420,7 +421,15 @@ public class FortnoxClient {
 				
 				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
 					// TODO: Handle if there are multiple invoices with the same reference.
-					invoiceMap.put(refInFortnox.trim(), i);
+					refInFortnox = refInFortnox.trim();
+					existing = invoiceMap.get(refInFortnox); 
+					if (existing==null) {
+						invoiceMap.put(refInFortnox, i);
+					} else {
+						// There's already an existing invoice with this reference. Keep it.
+						log.warn("Duplicate reference for [" + refInFortnox + "] in field " + referenceField + ".");
+						log.warn("Keeping invoice # " + existing.getDocumentNumber() + " and skipping invoice # " + i.getDocumentNumber());
+					}
 				} else {
 					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no reference in [" + referenceField + "].");
 				}
