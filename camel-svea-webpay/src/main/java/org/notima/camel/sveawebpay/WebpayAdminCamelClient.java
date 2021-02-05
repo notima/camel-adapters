@@ -413,7 +413,7 @@ public class WebpayAdminCamelClient {
 		
 		SveaPmtGwBusinessObjectFactory sof = new SveaPmtGwBusinessObjectFactory();
 		SveaCredential cr = getCredentialFromAccountNo(accountNo);
-		if (cr==null || cr.getCardMerchantId()==null) throw new Exception("No credentials configured for fetching orders using transactionId.");
+		if (cr==null || cr.getCardMerchantId()==null) throw new Exception("No credentials configured for fetching orders using transactionId [" + transactionId + "] for accountNo [" + accountNo + "].");
 		sof.init(Integer.parseInt(cr.getCardMerchantId()), cr.getCardSecretWord());
 
 		Order result = sof.lookupOrder(transactionId);
