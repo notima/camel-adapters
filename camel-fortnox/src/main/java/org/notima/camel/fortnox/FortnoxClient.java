@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import org.apache.camel.Header;
 import org.notima.api.fortnox.Fortnox4JSettings;
 import org.notima.api.fortnox.FortnoxClient3;
+import org.notima.api.fortnox.FortnoxConstants;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Customer;
 import org.notima.api.fortnox.entities3.Invoice;
@@ -360,6 +361,8 @@ public class FortnoxClient {
 	 * @param accessToken
 	 * @param referenceField	Possible values ExternalInvoiceReference1, ExternalInvoiceReference2, 
 	 * 							InvoiceReference, OCR, OrderReference, OurReference, YourOrderNumber, YourReference
+	 * 
+	 * @see org.notima.api.fortnox.FortnoxConstants
 	 * @return
 	 */
 	public Map<String,Invoice> getInvoiceMap(String clientSecret, String accessToken, String referenceField) throws Exception {
@@ -401,21 +404,21 @@ public class FortnoxClient {
 			String refInFortnox = null;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
-				if ("YourOrderNumber".equalsIgnoreCase(referenceField)) {
+				if (FortnoxConstants.YOURORDERNUMBER.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getYourOrderNumber();
-				} else if ("ExternalInvoiceReference1".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.EXTREF1.equalsIgnoreCase(referenceField)) {
 					refInFortnox = ii.getExternalInvoiceReference1();
-				} else if ("ExternalInvoiceReference2".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.EXTREF2.equalsIgnoreCase(referenceField)) {
 					refInFortnox = ii.getExternalInvoiceReference2();
-				} else if ("InvoiceReference".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.INVOICEREF.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getInvoiceReference();
-				} else if ("OCR".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.OCR.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getOCR();
-				} else if ("OrderReference".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.ORDERREF.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getOrderReference();
-				} else if ("OurReference".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.OURREF.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getOurReference();
-				} else if ("YourReference".equalsIgnoreCase(referenceField)) {
+				} else if (FortnoxConstants.YOURREF.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getYourReference();
 				}
 				
