@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.camel.Header;
 import org.notima.api.webpay.pmtapi.PmtApiClientRF;
@@ -57,6 +59,7 @@ public class WebpayAdminCamelClient {
 	private String			orgNo;
 	private String			jsonFile;
 	private List<SveaCredential>	credentials;
+	private Map<String, String> accountToMerchantIdMap = new TreeMap<String, String>();
 
 	/**
 	 * Create a new instance of a svea client using the body as configuration.
@@ -395,11 +398,20 @@ public class WebpayAdminCamelClient {
 			) throws Exception {
 		
 		SveaPmtAdminBusinessObjectFactory sof = new SveaPmtAdminBusinessObjectFactory();
-		SveaCredential cr = getCheckoutCredential(accountNo);
+		List<SveaCredential> crList = getCheckoutCredentials(accountNo);
+		SveaCredential cr = crList.size()>0 ? crList.get(0) : null; 
 		if (cr==null) throw new Exception("No credentials configured for fetching orders using checkoutOrderId.");
-		sof.init(cr.getServer(), cr.getMerchantId(), cr.getSecretWord());
 
-		Order result = sof.lookupOrder(checkoutOrderId);
+		Order result = null;
+		
+		for (SveaCredential ss : crList) {
+			sof.init(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
+			result = sof.lookupOrder(checkoutOrderId);
+			if (result!=null && crList.size()>1) {
+				mapAccountNoToMerchantId(accountNo, ss.getMerchantId());
+				break;
+			}
+		}
 		
 		return result;
 	}
@@ -500,10 +512,23 @@ public class WebpayAdminCamelClient {
 			}
 		} else {
 			// Merchant id is null, return first found
-			return getCheckoutCredential((String)null);
+			List<SveaCredential> list = getCheckoutCredentials(null);
+			return list.size()>0 ? list.get(0) : null;
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Says that this merchantId can fetch information for the given accountNo.
+	 * 
+	 * @param accountNo				The account No
+	 * @param merchantId			The merchant Id
+	 */
+	public void mapAccountNoToMerchantId(String accountNo, String merchantId) {
+		
+		accountToMerchantIdMap.put(accountNo, merchantId);
+		
 	}
 	
 	/**
@@ -511,13 +536,26 @@ public class WebpayAdminCamelClient {
 	 * 
 	 * @return	Returns checkout credentials (if they exist)
 	 */
-	public SveaCredential getCheckoutCredential(String accountNo) {
+	public List<SveaCredential> getCheckoutCredentials(String accountNo) {
+		
+		SveaCredential sc = null;
+		List<SveaCredential> result = new ArrayList<SveaCredential>();
+		
+		String merchantId = accountToMerchantIdMap.get(accountNo);
+		if (merchantId!=null) {
+			sc = getCheckoutCredential(Long.parseLong(merchantId));
+			if (sc!=null) {
+				result.add(sc);
+				return result;
+			}
+		}
 		
 		// If specified on account, use that
 		if (accountNo!=null) {
 			for (SveaCredential cr : credentials) {
 				if (cr.getAccountNo().equals(accountNo) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
-					return cr;
+					result.add(cr);
+					return result;
 				}
 			}
 		}
@@ -525,10 +563,11 @@ public class WebpayAdminCamelClient {
 		// If not found on specified account, try any
 		for (SveaCredential cr : credentials) {
 			if (cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
-				return cr;
+				result.add(cr);
 			}
 		}
-		return null;
+		
+		return result;
 	}
 	
 	/**
@@ -537,7 +576,8 @@ public class WebpayAdminCamelClient {
 	 * @return	Returns card merchant ID. NOTE! The card merchant ID must be defined in the same credential as the merchant ID.
 	 */
 	public String	getCardMerchantId(String accountNo) {
-		SveaCredential cr = getCheckoutCredential(accountNo);
+		List<SveaCredential> list = getCheckoutCredentials(accountNo);
+		SveaCredential cr = list.size()>0 ? list.get(0) : null;
 		if (cr!=null)
 			return cr.getCardMerchantId();
 		else 
