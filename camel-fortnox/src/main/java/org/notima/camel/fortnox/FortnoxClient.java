@@ -602,6 +602,8 @@ public class FortnoxClient {
 			@Header(value="bookkeepPayment")Boolean bookkeepPayment,
 			Payment payment) throws Exception {
 		
+		// TODO: Use FortnoxClient3.payCustomerInvoice to avoid duplicating code
+		
 		bof = getFortnoxAdapter(accessToken, clientSecret);
 		InvoicePayment pmt = null;
 		
@@ -663,6 +665,12 @@ public class FortnoxClient {
 		
 		if (!invoice.isBooked()) {
 			bof.getClient().performAction(true, "invoice", Integer.toString(pmt.getInvoiceNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
+		}
+		
+		// Make sure the payment isn't empty
+		if (pmt.getAmount()==0d && (pmt.getWriteOffs()==null || pmt.getWriteOffs().getWriteOff()==null || pmt.getWriteOffs().getWriteOff().isEmpty())) {
+			log.info("Payment for invoice " + pmt.getInvoiceNumber() + " is empty. Not processing.");
+			return pmt;
 		}
 		
 		pmt = bof.getClient().setCustomerPayment(pmt);
