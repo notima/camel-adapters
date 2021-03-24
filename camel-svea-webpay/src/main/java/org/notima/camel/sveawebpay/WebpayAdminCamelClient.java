@@ -541,12 +541,14 @@ public class WebpayAdminCamelClient {
 		SveaCredential sc = null;
 		List<SveaCredential> result = new ArrayList<SveaCredential>();
 		
-		String merchantId = accountToMerchantIdMap.get(accountNo);
-		if (merchantId!=null) {
-			sc = getCheckoutCredential(Long.parseLong(merchantId));
-			if (sc!=null) {
-				result.add(sc);
-				return result;
+		if (accountNo!=null) {
+			String merchantId = accountToMerchantIdMap.get(accountNo);
+			if (merchantId!=null) {
+				sc = getCheckoutCredential(Long.parseLong(merchantId));
+				if (sc!=null) {
+					result.add(sc);
+					return result;
+				}
 			}
 		}
 		
