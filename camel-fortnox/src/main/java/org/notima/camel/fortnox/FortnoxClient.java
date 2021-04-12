@@ -535,6 +535,9 @@ public class FortnoxClient {
 		String orderNo = null;
 		
 		if (invoiceRef!=null && invoiceRef.trim().length()>0) {
+
+			Order order = null;
+
 			// If invoice ref type is invoice no in Fortnox, there's no need 
 			// to match from order
 			if (invoiceRefType==null || invoiceRefType.equalsIgnoreCase("invoice") || invoiceRefType.equalsIgnoreCase("DocumentNumber")) {
@@ -546,15 +549,21 @@ public class FortnoxClient {
 			} else if (invoiceRefType.equalsIgnoreCase("order")) {
 				
 				orderNo = invoiceRef;
-				Order order = bof.getClient().getOrder(orderNo);
-				if (order.getInvoiceReference()==null || order.getInvoiceReference().trim().length()==0) {
-					order = createInvoiceFromOrderNo(bof, orderNo, reconciliationDate);
+				try {
+					order = bof.getClient().getOrder(orderNo);
+					if (order.getInvoiceReference()==null || order.getInvoiceReference().trim().length()==0) {
+						order = createInvoiceFromOrderNo(bof, orderNo, reconciliationDate);
+					}
+					invoiceNo = order.getInvoiceReference();
+				} catch (Exception ee) {
+
+					// Obviously we couldn't use the orderNo to lookup.
+					log.info("Can't lookup order [" + orderNo + "]: " + ee.getMessage());
+					
 				}
 				
-				invoiceNo = order.getInvoiceReference();
-				
 			} else {
-				Order order = null;
+				
 				// If reference type is something else, create an invoice map using the given
 				// invoice ref type.
 				invoice = getInvoiceMap(clientSecret, accessToken, invoiceRefType).get(invoiceRef);
