@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.camel.Header;
 import org.notima.api.fortnox.Fortnox4JSettings;
@@ -365,7 +367,7 @@ public class FortnoxClient {
 	 * @see org.notima.api.fortnox.FortnoxConstants
 	 * @return
 	 */
-	public Map<String,Invoice> getInvoiceMap(String clientSecret, String accessToken, String referenceField) throws Exception {
+	public Map<String,Invoice> getInvoiceMap(String clientSecret, String accessToken, String referenceField, String invoiceRefRegEx) throws Exception {
 		
 		if (invoiceMap==null || !accessToken.equals(mapAccessToken)) {
 
@@ -397,6 +399,13 @@ public class FortnoxClient {
 			
 			log.info("{} invoices to map up.", subsetList.size());
 
+			Pattern re = null;
+			Matcher m = null;
+			
+			if (invoiceRefRegEx!=null && invoiceRefRegEx.trim().length()>0) {
+				re = Pattern.compile(invoiceRefRegEx);
+			}
+			
 			int invoiceCount = 0;
 			
 			Invoice i;
@@ -420,6 +429,19 @@ public class FortnoxClient {
 					refInFortnox = i.getOurReference();
 				} else if (FortnoxConstants.YOURREF.equalsIgnoreCase(referenceField)) {
 					refInFortnox = i.getYourReference();
+				}
+
+				// Apply regex if needed
+				if (re!=null && refInFortnox!=null) {
+					m = re.matcher(refInFortnox);
+					if (m.matches()) {
+						// If the matcher contains a group
+						if (m.groupCount()>0) {
+							refInFortnox = m.group(1);
+						} else {
+							refInFortnox =m.group();
+						}
+					}
 				}
 				
 				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
@@ -460,9 +482,10 @@ public class FortnoxClient {
 	 * @param clientSecret
 	 * @param accessToken
 	 * @param referenceField
+	 * @param refRegEx
 	 * @return
 	 */
-	public Map<String,Order> getOrderMap(String clientSecret, String accessToken, String referenceField) throws Exception {
+	public Map<String,Order> getOrderMap(String clientSecret, String accessToken, String referenceField, String refRegEx) throws Exception {
 		
 		if (orderMap==null || !accessToken.equals(mapAccessToken)) {
 
@@ -480,12 +503,35 @@ public class FortnoxClient {
 			if (subsetList==null)
 				return orderMap;
 			
+			Pattern re = null;
+			Matcher m = null;
+			
+			if (refRegEx!=null && refRegEx.trim().length()>0) {
+				re = Pattern.compile(refRegEx);
+			}
+			
 			Order i;
+			String fortnoxRef = null;
 			for (OrderSubset ii : subsetList) {
 				i = bof.getClient().getOrder(ii.getDocumentNumber());
 				if ("yourOrderNumber".equals(referenceField)) {
-					orderMap.put(i.getYourOrderNumber(), i);
+					fortnoxRef = i.getYourOrderNumber();
 				}
+				
+				// Apply regex if needed
+				if (re!=null && fortnoxRef!=null) {
+					m = re.matcher(fortnoxRef);
+					if (m.matches()) {
+						// If the matcher contains a group
+						if (m.groupCount()>0) {
+							fortnoxRef = m.group(1);
+						} else {
+							fortnoxRef = m.group();
+						}
+					}
+				}
+				orderMap.put(fortnoxRef, i);
+				
 			}
 			// Associate invoice map access token with access token
 			mapAccessToken = accessToken;
@@ -519,6 +565,7 @@ public class FortnoxClient {
 	 * 							ExternalInvoiceReference2, order (meaning orderNo of order existing in Fortnox), 
 	 * 							InvoiceReference, OCR, OrderReference, OurReference,
 	 * 							YourOrderNumber, YourReference
+	 * @param invoiceRefRegEx
 	 * 
 	 */
 	public synchronized Invoice getInvoiceToPay(
@@ -526,8 +573,9 @@ public class FortnoxClient {
 			@Header(value="accessToken")String accessToken,
 			@Header(value="invoiceRef")String invoiceRef,
 			@Header(value="invoiceRefType")String invoiceRefType,
-			@Header(value="reconciliationDate")Date reconciliationDate) throws Exception {
-
+			@Header(value="reconciliationDate")Date reconciliationDate,
+			@Header(value="refRegEx")String invoiceRefRegEx) throws Exception {
+		
 		bof = getFortnoxAdapter(accessToken, clientSecret);		
 		
 		Invoice invoice = null;
@@ -566,10 +614,10 @@ public class FortnoxClient {
 				
 				// If reference type is something else, create an invoice map using the given
 				// invoice ref type.
-				invoice = getInvoiceMap(clientSecret, accessToken, invoiceRefType).get(invoiceRef);
+				invoice = getInvoiceMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
 				if (invoice==null) {
 					// Check if invoice hasn't been created from order
-					order = getOrderMap(clientSecret, accessToken, invoiceRefType).get(invoiceRef);
+					order = getOrderMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
 					if (order!=null) {
 						order = createInvoiceFromOrderNo(bof, order.getDocumentNumber(), reconciliationDate);
 						invoiceNo = order.getInvoiceReference();
