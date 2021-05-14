@@ -530,7 +530,11 @@ public class FortnoxClient {
 						}
 					}
 				}
-				orderMap.put(fortnoxRef, i);
+				if (fortnoxRef!=null) {
+					orderMap.put(fortnoxRef, i);
+				} else {
+					log.debug("No ref found for order " + i.getDocumentNumber());
+				}
 				
 			}
 			// Associate invoice map access token with access token
