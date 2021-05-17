@@ -511,6 +511,7 @@ public class FortnoxClient {
 			}
 			
 			Order i;
+			int orderCount = 0;
 			String fortnoxRef = null;
 			for (OrderSubset ii : subsetList) {
 				i = bof.getClient().getOrder(ii.getDocumentNumber());
@@ -536,11 +537,17 @@ public class FortnoxClient {
 					log.debug("No ref found for order " + i.getDocumentNumber());
 				}
 				
+				orderCount++;
+				if (orderCount%100 == 0) {
+					log.info("{} orders mapped...", orderCount);
+				}
+				
+				
 			}
 			// Associate invoice map access token with access token
 			mapAccessToken = accessToken;
 			if (log.isDebugEnabled()) {
-				log.debug("Cached " + orderMap.size() + " invoices for " + taxId + " : " + clientName);
+				log.debug("Cached " + orderMap.size() + " orders for " + taxId + " : " + clientName);
 			}
 			
 		}
@@ -620,12 +627,17 @@ public class FortnoxClient {
 				// invoice ref type.
 				invoice = getInvoiceMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
 				if (invoice==null) {
-					// Check if invoice hasn't been created from order
-					order = getOrderMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
-					if (order!=null) {
-						order = createInvoiceFromOrderNo(bof, order.getDocumentNumber(), reconciliationDate);
-						invoiceNo = order.getInvoiceReference();
-					}
+					
+					 if (!invoiceRefType.toLowerCase().contains("invoice") && !invoiceRefType.toLowerCase().contains("ocr")) { 
+						
+						// Check if invoice hasn't been created from order
+						order = getOrderMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
+						if (order!=null) {
+							order = createInvoiceFromOrderNo(bof, order.getDocumentNumber(), reconciliationDate);
+							invoiceNo = order.getInvoiceReference();
+						}
+						
+					 }
 				} else {
 					invoiceNo = invoice.getDocumentNumber();
 				}
