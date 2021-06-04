@@ -5,9 +5,9 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
-import org.notima.bg.BgUtil;
 import org.notima.generic.businessobjects.Invoice;
 import org.notima.generic.ubl.factory.UBL21Converter;
+import org.notima.util.NotimaUtil;
 
 public class UblCamelClient {
 
@@ -17,6 +17,7 @@ public class UblCamelClient {
 	 * @param src
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public InvoiceType convertFromBusinessObjectsInvoice(Invoice src) {
 		InvoiceType result = UBL21Converter.convert(src);
 		return result;
@@ -28,6 +29,7 @@ public class UblCamelClient {
 	 * @param src
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public CreditNoteType convertFromBusinessObjectsCreditNote(Invoice src) {
 		CreditNoteType result = UBL21Converter.convertToCreditNote(src);
 		return result;
@@ -84,8 +86,8 @@ public class UblCamelClient {
 		// TODO: This must be customizable
 		if ("faktSveaFtg".equals(paymentTerm)) {
 			// Get first 5 digits of invoice prefix and add invoice no to the end.
-			String OCRsource = invoicePrefix.substring(0, 5) + BgUtil.fillToLength(factoringInvoiceNo, true, '0', 10);
-			invoiceRef = BgUtil.toOCRNumberWithLengthCheck(OCRsource);
+			String OCRsource = invoicePrefix.substring(0, 5) + NotimaUtil.fillToLength(factoringInvoiceNo, true, '0', 10);
+			invoiceRef = NotimaUtil.toOCRNumberWithLengthCheck(OCRsource);
 			dst.setID(invoiceRef);
 		}
 		
