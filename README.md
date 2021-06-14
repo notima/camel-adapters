@@ -12,3 +12,11 @@ feature:install camel-sveawebpay
 feature:install camel-ubl
 feature:install camel-infometric
 ```
+
+### Snapshots
+
+To use snapshots, make sure that ``${KARAF_HOME}/etc/org.ops4j.pax.url.mvn.cfg`` has the repository 
+
+     https://oss.sonatype.org/content/repositories/snapshots@id=mvncentral.snaps@snapshots
+     
+included in the ``org.ops4j.pax.url.mvn.repositories`` property.

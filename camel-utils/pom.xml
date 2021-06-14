@@ -30,6 +30,9 @@
 										org.notima.camel.processor,
 										org.notima.camel.utils,										
 						</Export-Package>
+						<Import-Package>
+							*
+						</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -39,4 +42,10 @@
   </build>
   
   
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.camel</groupId>
+  		<artifactId>camel-mail</artifactId>
+  	</dependency>
+  </dependencies>
 </project>
