@@ -18,7 +18,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<businessadapters.version>1.8.11-SNAPSHOT</businessadapters.version>
-		<camel.version>2.25.2</camel.version>
+		<camel.version>2.25.4</camel.version>
 	</properties>
 
 	<modules>
