@@ -41,11 +41,29 @@
   
   </build>
   
+  <dependencyManagement>
+    <dependencies>
+      
+      <dependency>
+    	<groupId>org.notima.generic.businessobjects.adapter</groupId>
+    	<artifactId>businessObjectAdapters</artifactId>
+    	<version>${businessadapters.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
   
   <dependencies>
   	<dependency>
   		<groupId>org.apache.camel</groupId>
   		<artifactId>camel-mail</artifactId>
   	</dependency>
+  	
+  	<dependency>
+  		<groupId>org.notima</groupId>
+  		<artifactId>notima-util</artifactId>
+  		<version>${notima-util.version}</version>
+  	</dependency>
+  	
   </dependencies>
 </project>
