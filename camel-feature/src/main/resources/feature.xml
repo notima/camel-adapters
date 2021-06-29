@@ -50,4 +50,12 @@
     
     </feature>
     
+    <feature name="camel-bankgiro" description="Bankgiro for Camel" version="${project.version}">
+		<feature>camel-notima-common</feature>
+		<bundle>mvn:org.notima.bg/bankgiro-api/${bankgiro-api.version}</bundle>
+    	<bundle>mvn:org.notima.camel-adapters/camel-bankgiro/${project.version}</bundle>
+    
+    </feature>
+    
+    
 </features>

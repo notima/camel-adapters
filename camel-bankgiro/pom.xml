@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.notima.camel-adapters</groupId>
+    <artifactId>camel-adapters</artifactId>
+    <version>0.0.5-SNAPSHOT</version>
+  </parent>
+  <artifactId>camel-bankgiro</artifactId>
+  <name>Camel Bankgiro</name>
+  <packaging>bundle</packaging>  
+  
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>org.notima.bg</groupId>
+  			<artifactId>bankgiro-api</artifactId>
+  			<version>${bankgiro-api.version}</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.notima.bg</groupId>
+  		<artifactId>bankgiro-api</artifactId>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+  
+		<plugins>
+		
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>4.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>
+							org.notima.camel.bankgiro
+						</Export-Package>
+						<Import-Package>
+							*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+  
+  </build>
+  
+</project>
