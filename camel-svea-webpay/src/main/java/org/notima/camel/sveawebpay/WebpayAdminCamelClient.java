@@ -407,8 +407,10 @@ public class WebpayAdminCamelClient {
 		for (SveaCredential ss : crList) {
 			sof.init(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
 			result = sof.lookupOrder(checkoutOrderId);
-			if (result!=null && crList.size()>1) {
-				mapAccountNoToMerchantId(accountNo, ss.getMerchantId());
+			if (result!=null) {
+				if (crList.size()>1 && accountNo!=null) {
+					mapAccountNoToMerchantId(accountNo, ss.getMerchantId());
+				}
 				break;
 			}
 		}
