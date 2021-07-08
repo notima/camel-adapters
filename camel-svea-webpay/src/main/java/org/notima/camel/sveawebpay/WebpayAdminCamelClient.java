@@ -173,7 +173,7 @@ public class WebpayAdminCamelClient {
 	 */
 	public void setCredentialsFromJsonBody(String body) {
 
-		ListOfSveaCredentials credList = JsonUtil.gson.fromJson(body, ListOfSveaCredentials.class);
+		ListOfSveaCredentials credList = JsonUtil.buildGson().fromJson(body, ListOfSveaCredentials.class);
 		credentials = credList.getCredentials();
 		
 	}
@@ -494,7 +494,7 @@ public class WebpayAdminCamelClient {
 		
 		ListOfSveaCredentials result = client.getCredentialsByIdentity(username, password);
 		
-		return JsonUtil.gson.toJson(result);
+		return JsonUtil.buildGson().toJson(result);
 	}
 	
 	
@@ -655,7 +655,7 @@ public class WebpayAdminCamelClient {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -days);
-		String fromDateStr = JsonUtil.dfmt.format(cal.getTime());
+		String fromDateStr = JsonUtil.getDateFormat().format(cal.getTime());
 		
 		return fromDateStr;
 		
@@ -683,7 +683,7 @@ public class WebpayAdminCamelClient {
 		if (lastReconcileDate==null || lastReconcileDate.trim().length()==0) {
 			lastReconcileDate = getTodayMinusDaysStr(2);
 		}
-		java.util.Date lastDate = JsonUtil.dfmt.parse(lastReconcileDate);
+		java.util.Date lastDate = JsonUtil.getDateFormat().parse(lastReconcileDate);
 		
 		Calendar cal = Calendar.getInstance();
 		// Set to yesterday
@@ -697,7 +697,7 @@ public class WebpayAdminCamelClient {
 		while(cal.getTime().before(untilDate)) {
 			dow = cal.get(Calendar.DAY_OF_WEEK);
 			if (dow!=Calendar.SATURDAY && dow!=Calendar.SUNDAY) 
-				result.add(JsonUtil.dfmt.format(cal.getTime()));
+				result.add(JsonUtil.getDateFormat().format(cal.getTime()));
 			cal.add(Calendar.DATE,1);
 		}
 		
@@ -728,9 +728,9 @@ public class WebpayAdminCamelClient {
 		
 		// Parse dates
 		java.util.Date untilDate = null;
-		java.util.Date fromDate = JsonUtil.dfmt.parse(fromDateStr);
+		java.util.Date fromDate = JsonUtil.getDateFormat().parse(fromDateStr);
 		if (untilDateStr!=null) {
-			untilDate = JsonUtil.dfmt.parse(untilDateStr);
+			untilDate = JsonUtil.getDateFormat().parse(untilDateStr);
 		} else {
 			untilDate = fromDate;
 		}
