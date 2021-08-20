@@ -24,6 +24,7 @@ public class TestConfig {
 	public static String	clientPassword;
 	public static String	merchantId;
 	public static String	secretWord;
+	public static String	creditedCheckoutOrder;
 	
 	public static String	DEFAULT_CONFIG_FILE = "default-config.properties";
 	public static String	USER_CONFIG_FILE = "user-config.properties";
@@ -47,6 +48,8 @@ public class TestConfig {
 				clientPassword = props.getProperty("clientPassword");
 				merchantId = props.getProperty("merchantId");
 				secretWord = props.getProperty("secretWord");
+				
+				creditedCheckoutOrder = props.getProperty("creditedCheckoutOrder");
 				
 			} catch (FileNotFoundException e) {
 				testLogger.severe("No default-config.properties file found in classpath / path");

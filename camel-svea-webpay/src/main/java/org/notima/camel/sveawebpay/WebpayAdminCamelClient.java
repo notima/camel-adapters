@@ -118,11 +118,12 @@ public class WebpayAdminCamelClient {
 	
 	/**
 	 * Creates a client using the file path set in setJsonFile.
+	 * @param jsonFile TODO
 	 * 
 	 * @return	A client.
 	 * @throws Exception
 	 */
-	public WebpayAdminCamelClient createClientFromFile() throws Exception {
+	public static WebpayAdminCamelClient buildClientFromFile(String jsonFile) throws Exception {
 		if (jsonFile==null) throw new Exception("No jsonFile specified. Set property jsonFile");
 		File f = new File(jsonFile);
 		if (!f.exists())
@@ -134,6 +135,7 @@ public class WebpayAdminCamelClient {
 		while((line = br.readLine())!=null) {
 			fileContent.append(line);
 		}
+		br.close();
 		return createClientFromJsonBody(null, fileContent.toString());
 	}
 	
@@ -364,11 +366,11 @@ public class WebpayAdminCamelClient {
 	 * 
 	 * 
 	 */
-	public Order getOrderByClientOrderId(
+	public Order<?> getOrderByClientOrderId(
 			@Header(value="accountNo")String accountNo,
 			@Header(value="clientOrderId")String clientOrderId) throws Exception {
 		
-		Order result = null;
+		Order<?> result = null;
 		if (clientOrderId==null) return null;
 
 		SveaCredential cr = getCredentialFromAccountNo(accountNo);
@@ -392,7 +394,7 @@ public class WebpayAdminCamelClient {
 	 * @param	accountNo			Can be null, but if there are many merchantIds on the same orgNo, it should be set.
 	 * @param 	checkoutOrderId		The checkout orderId to lookup.
 	 */
-	public Order getOrderByCheckoutOrderId(
+	public Order<?> getOrderByCheckoutOrderId(
 			@Header(value="accountNo")String accountNo,
 			@Header(value="checkoutOrderId")String checkoutOrderId
 			) throws Exception {
@@ -402,7 +404,7 @@ public class WebpayAdminCamelClient {
 		SveaCredential cr = crList.size()>0 ? crList.get(0) : null; 
 		if (cr==null) throw new Exception("No credentials configured for fetching orders using checkoutOrderId.");
 
-		Order result = null;
+		Order<?> result = null;
 		
 		for (SveaCredential ss : crList) {
 			sof.init(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
@@ -421,7 +423,7 @@ public class WebpayAdminCamelClient {
 	/**
 	 * Returns order data given checkout order id
 	 */
-	public Order getOrderByTransactionId(@Header(value="accountNo")String accountNo, 
+	public Order<?> getOrderByTransactionId(@Header(value="accountNo")String accountNo, 
 			@Header(value="transactionId")String transactionId
 			) throws Exception {
 		
@@ -430,7 +432,7 @@ public class WebpayAdminCamelClient {
 		if (cr==null || cr.getCardMerchantId()==null) throw new Exception("No credentials configured for fetching orders using transactionId [" + transactionId + "] for accountNo [" + accountNo + "].");
 		sof.init(Integer.parseInt(cr.getCardMerchantId()), cr.getCardSecretWord());
 
-		Order result = sof.lookupOrder(transactionId);
+		Order<?> result = sof.lookupOrder(transactionId);
 		
 		return result;
 	}
@@ -445,7 +447,7 @@ public class WebpayAdminCamelClient {
 	 */
 	public CreateOrderResponse2 createOrder(
 			@Header(value="accountNo")String accountNo, 
-			Order src) throws Exception  
+			Order<?> src) throws Exception  
 	{
 
 		CreateOrderResponse2 result = null;
@@ -825,7 +827,7 @@ public class WebpayAdminCamelClient {
 	 * @param detail
 	 * @return
 	 */
-	public Payment removeNativeReference(Payment detail) {
+	public Payment<?> removeNativeReference(Payment<?> detail) {
 		if (detail!=null) {
 			detail.setNativePayment(null);
 		}

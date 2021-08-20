@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
+import org.notima.camel.sveawebpay.WebpayAdminCamelClient;
+
 import com.svea.webpay.common.auth.ListOfSveaCredentials;
 
 public class TestAdminClientUtil {
@@ -28,6 +30,13 @@ public class TestAdminClientUtil {
 		return ListOfSveaCredentials.readFromJsonFile(credentialsFile);
 		
 	}
+
+
+	public WebpayAdminCamelClient getTestWebpayAdminCamelClient() throws Exception {
+		
+		return WebpayAdminCamelClient.buildClientFromFile(getCredentialsFile().getAbsolutePath());
+		
+	}
 	
 	public File getCredentialsFile() throws IOException {
 		
@@ -46,7 +55,7 @@ public class TestAdminClientUtil {
 		return result;
 		
 	}
-
+	
 	private void throwFileNotFoundException(String description) throws FileNotFoundException {
 		String msg = description + " : " + credentialsFileName;
 		throw new FileNotFoundException(msg);
