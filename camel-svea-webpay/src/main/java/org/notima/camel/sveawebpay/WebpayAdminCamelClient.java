@@ -407,15 +407,10 @@ public class WebpayAdminCamelClient {
 		Order<?> result = null;
 		
 		for (SveaCredential ss : crList) {
-			sof.init(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
-			result = sof.lookupOrder(checkoutOrderId);
-			if (result!=null) {
-				if (crList.size()>1 && accountNo!=null) {
-					mapAccountNoToMerchantId(accountNo, ss.getMerchantId());
-				}
-				break;
-			}
+			sof.addCredential(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
+		
 		}
+		result = sof.lookupOrder(checkoutOrderId);
 		
 		return result;
 	}
@@ -896,7 +891,7 @@ public class WebpayAdminCamelClient {
 			@Header(value="secretWord")String secretWord) {
 		
 		SveaPmtAdminBusinessObjectFactory f = new SveaPmtAdminBusinessObjectFactory();
-		f.init(serverName, merchantId, secretWord);
+		f.addCredential(serverName, merchantId, secretWord);
 		return f;
 		
 	}
