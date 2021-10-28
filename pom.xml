@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.notima.camel-adapters</groupId>
 	<artifactId>camel-adapters</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.5</version>
 	<packaging>pom</packaging>
 	<name>Notima Camel Adapters</name>
 
@@ -17,9 +17,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<businessadapters.version>1.8.11-SNAPSHOT</businessadapters.version>
+		<businessadapters.version>1.8.11</businessadapters.version>
 		<camel.version>2.25.4</camel.version>
-		<notima-util.version>0.0.2-SNAPSHOT</notima-util.version>
+		<notima-util.version>0.0.2</notima-util.version>
 		<bankgiro-api.version>1.3.7</bankgiro-api.version>
 	</properties>
 
@@ -120,7 +120,7 @@
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
-						<phase>deploy</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
