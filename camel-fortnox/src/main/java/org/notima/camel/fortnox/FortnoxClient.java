@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 public class FortnoxClient {
 	
 	// Invoice Map mapping relevant key to invoice
-	private Map<String,Invoice>	invoiceMap;
+	private Map<String,List<Invoice>>	invoiceMap;
 	// Order Map mapping relevant key to order
 	private Map<String,Order> orderMap;
 	// Access Token associated with the maps
@@ -367,7 +367,7 @@ public class FortnoxClient {
 	 * @see org.notima.api.fortnox.FortnoxConstants
 	 * @return
 	 */
-	public Map<String,Invoice> getInvoiceMap(String clientSecret, String accessToken, String referenceField, String invoiceRefRegEx) throws Exception {
+	public Map<String,List<Invoice>> getInvoiceMap(String clientSecret, String accessToken, String referenceField, String invoiceRefRegEx) throws Exception {
 		
 		if (invoiceMap==null || !accessToken.equals(mapAccessToken)) {
 
@@ -379,7 +379,7 @@ public class FortnoxClient {
 			clientName = cs.getName();
 			taxId = cs.getOrganizationNumber();
 			
-			invoiceMap = new TreeMap<String, Invoice>();
+			invoiceMap = new TreeMap<String, List<Invoice>>();
 			
 			Invoices invoices = bof.getClient().getInvoices(FortnoxClient3.FILTER_UNPAID);
 			// Get unposted as well
@@ -409,7 +409,7 @@ public class FortnoxClient {
 			int invoiceCount = 0;
 			
 			Invoice i;
-			Invoice existing = null;
+			List<Invoice> existing = null;
 			String refInFortnox = null;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
@@ -445,16 +445,14 @@ public class FortnoxClient {
 				}
 				
 				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
-					// TODO: Handle if there are multiple invoices with the same reference.
 					refInFortnox = refInFortnox.trim();
 					existing = invoiceMap.get(refInFortnox); 
 					if (existing==null) {
-						invoiceMap.put(refInFortnox, i);
-					} else {
-						// There's already an existing invoice with this reference. Keep it.
-						log.warn("Duplicate reference for [" + refInFortnox + "] in field " + referenceField + ".");
-						log.warn("Keeping invoice # " + existing.getDocumentNumber() + " and skipping invoice # " + i.getDocumentNumber());
+						existing = new ArrayList<Invoice>();
+						invoiceMap.put(refInFortnox, existing);
 					}
+					existing.add(i);
+					
 				} else {
 					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no reference in [" + referenceField + "].");
 				}
@@ -579,7 +577,7 @@ public class FortnoxClient {
 	 * @param invoiceRefRegEx
 	 * 
 	 */
-	public synchronized Invoice getInvoiceToPay(
+	public synchronized List<Invoice> getInvoiceToPay(
 			@Header(value="clientSecret")String clientSecret,
 			@Header(value="accessToken")String accessToken,
 			@Header(value="invoiceRef")String invoiceRef,
@@ -589,7 +587,7 @@ public class FortnoxClient {
 		
 		bof = getFortnoxAdapter(accessToken, clientSecret);		
 		
-		Invoice invoice = null;
+		List<Invoice> invoices = null;
 		String invoiceNo = null;
 		String orderNo = null;
 		
@@ -606,6 +604,8 @@ public class FortnoxClient {
 			// If reference type is order, the order in Fortnox is looked up
 			// to find the related invoice in Fortnox.
 			} else if (invoiceRefType.equalsIgnoreCase("order")) {
+				
+				log.debug("Looking up invoice for order " + orderNo);
 				
 				orderNo = invoiceRef;
 				try {
@@ -625,8 +625,8 @@ public class FortnoxClient {
 				
 				// If reference type is something else, create an invoice map using the given
 				// invoice ref type.
-				invoice = getInvoiceMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
-				if (invoice==null) {
+				invoices = getInvoiceMap(clientSecret, accessToken, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
+				if (invoices==null) {
 					
 					 if (!invoiceRefType.toLowerCase().contains("invoice") && !invoiceRefType.toLowerCase().contains("ocr")) { 
 						
@@ -638,18 +638,18 @@ public class FortnoxClient {
 						}
 						
 					 }
-				} else {
-					invoiceNo = invoice.getDocumentNumber();
 				}
 			}
 		}
 		
-		// Get the invoice
-		if (invoiceNo!=null && invoice==null) {
-			invoice = bof.getClient().getInvoice(invoiceNo);
+		// Get the invoice if there's an invoice no but not found in the invoice map.
+		if (invoiceNo!=null && invoices==null) {
+			Invoice invoice = bof.getClient().getInvoice(invoiceNo);
+			invoices = new ArrayList<Invoice>();
+			invoices.add(invoice);
 		}
 		
-		return invoice;
+		return invoices;
 		
 	}
 	
