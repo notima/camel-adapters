@@ -17,9 +17,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<businessadapters.version>1.8.11</businessadapters.version>
+		<businessadapters.version>1.8.12-SNAPSHOT</businessadapters.version>
 		<camel.version>2.25.4</camel.version>
-		<notima-util.version>0.0.2</notima-util.version>
+		<notima-util.version>0.0.3-SNAPSHOT</notima-util.version>
 		<bankgiro-api.version>1.3.7</bankgiro-api.version>
 	</properties>
 
