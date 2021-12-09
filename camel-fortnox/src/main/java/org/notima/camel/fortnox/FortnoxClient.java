@@ -55,8 +55,11 @@ import org.slf4j.LoggerFactory;
  */
 public class FortnoxClient {
 	
+	// Invoice document number map
+	private Map<String,Invoice> 		invoiceMap;
+	
 	// Invoice Map mapping relevant key to invoice
-	private Map<String,List<Invoice>>	invoiceMap;
+	private Map<String,List<Invoice>>	invoiceReferenceMap;
 	// Order Map mapping relevant key to order
 	private Map<String,Order> orderMap;
 	// Access Token associated with the maps
@@ -65,6 +68,8 @@ public class FortnoxClient {
 	private String	clientName;
 	// Tax id associated with the access token
 	private String	taxId;
+	// The reference field used for the invoice map
+	private String	referenceField;
 	
 	// Default supplier name if a new supplier is created automatically (@see getSupplierByOrgNo)
 	public static String DEFAULT_NEW_SUPPLIER_NAME = "Supplier created by Fortnox4J"; 
@@ -369,9 +374,11 @@ public class FortnoxClient {
 	 */
 	public Map<String,List<Invoice>> getInvoiceMap(String clientSecret, String accessToken, String referenceField, String invoiceRefRegEx) throws Exception {
 		
-		if (invoiceMap==null || !accessToken.equals(mapAccessToken)) {
+		if (invoiceReferenceMap==null || !accessToken.equals(mapAccessToken)) {
 
-			log.info("Refreshing invoiceMap. This might take some time...");
+			this.referenceField = referenceField;
+			
+			log.info("Refreshing invoiceMap using " + referenceField + ". This might take some time...");
 			
 			bof = getFortnoxAdapter(accessToken, clientSecret);
 			
@@ -379,7 +386,8 @@ public class FortnoxClient {
 			clientName = cs.getName();
 			taxId = cs.getOrganizationNumber();
 			
-			invoiceMap = new TreeMap<String, List<Invoice>>();
+			invoiceReferenceMap = new TreeMap<String, List<Invoice>>();
+			invoiceMap = new TreeMap<String, Invoice>();
 			
 			Invoices invoices = bof.getClient().getInvoices(FortnoxClient3.FILTER_UNPAID);
 			// Get unposted as well
@@ -395,7 +403,7 @@ public class FortnoxClient {
 
 			// If there's no unposted or unpaid invoices return empty invoiceMap
 			if (subsetList==null)
-				return invoiceMap;
+				return invoiceReferenceMap;
 			
 			log.info("{} invoices to map up.", subsetList.size());
 
@@ -413,23 +421,8 @@ public class FortnoxClient {
 			String refInFortnox = null;
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
-				if (FortnoxConstants.YOURORDERNUMBER.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getYourOrderNumber();
-				} else if (FortnoxConstants.EXTREF1.equalsIgnoreCase(referenceField)) {
-					refInFortnox = ii.getExternalInvoiceReference1();
-				} else if (FortnoxConstants.EXTREF2.equalsIgnoreCase(referenceField)) {
-					refInFortnox = ii.getExternalInvoiceReference2();
-				} else if (FortnoxConstants.INVOICEREF.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getInvoiceReference();
-				} else if (FortnoxConstants.OCR.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getOCR();
-				} else if (FortnoxConstants.ORDERREF.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getOrderReference();
-				} else if (FortnoxConstants.OURREF.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getOurReference();
-				} else if (FortnoxConstants.YOURREF.equalsIgnoreCase(referenceField)) {
-					refInFortnox = i.getYourReference();
-				}
+				
+				refInFortnox = getInvoiceReference(i);
 
 				// Apply regex if needed
 				if (re!=null && refInFortnox!=null) {
@@ -446,16 +439,19 @@ public class FortnoxClient {
 				
 				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
 					refInFortnox = refInFortnox.trim();
-					existing = invoiceMap.get(refInFortnox); 
+					existing = invoiceReferenceMap.get(refInFortnox); 
 					if (existing==null) {
 						existing = new ArrayList<Invoice>();
-						invoiceMap.put(refInFortnox, existing);
+						invoiceReferenceMap.put(refInFortnox, existing);
 					}
 					existing.add(i);
 					
 				} else {
 					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no reference in [" + referenceField + "].");
 				}
+				
+				// Add to invoice map
+				invoiceMap.put(i.getDocumentNumber(), i);
 				
 				invoiceCount++;
 				if (invoiceCount%100 == 0) {
@@ -466,14 +462,40 @@ public class FortnoxClient {
 			// Associate invoice map access token with access token
 			mapAccessToken = accessToken;
 			if (log.isDebugEnabled()) {
-				log.debug("Cached " + invoiceMap.size() + " invoices for " + taxId + " : " + clientName);
+				log.debug("Cached " + invoiceReferenceMap.size() + " invoices for " + taxId + " : " + clientName);
 			}
 			
 		}
 
-		return invoiceMap;
+		return invoiceReferenceMap;
 	}
 
+	public String getInvoiceReference(Invoice i) {
+
+		String refInFortnox = null;
+		
+		if (FortnoxConstants.YOURORDERNUMBER.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getYourOrderNumber();
+		} else if (FortnoxConstants.EXTREF1.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getExternalInvoiceReference1();
+		} else if (FortnoxConstants.EXTREF2.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getExternalInvoiceReference2();
+		} else if (FortnoxConstants.INVOICEREF.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getInvoiceReference();
+		} else if (FortnoxConstants.OCR.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getOCR();
+		} else if (FortnoxConstants.ORDERREF.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getOrderReference();
+		} else if (FortnoxConstants.OURREF.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getOurReference();
+		} else if (FortnoxConstants.YOURREF.equalsIgnoreCase(referenceField)) {
+			refInFortnox = i.getYourReference();
+		}
+		
+		return refInFortnox;
+		
+	}
+	
 	/**
 	 * Creates a mapping of orders using the given reference field. Only non-invoiced orders are included.
 	 * 
@@ -751,11 +773,47 @@ public class FortnoxClient {
 		// Book the payment directly if account and mode of payment is set.
 		if (bookkeepPayment.booleanValue() && pmt!=null && pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
 			bof.getClient().performAction(true, "invoicepayment", Integer.toString(pmt.getNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
+			removeFromInvoiceMapIfFullyPaid(pmt.getInvoiceNumber().toString());
 		}
 		
 		return pmt;
 	}
 
+	private void removeFromInvoiceMapIfFullyPaid(String invoiceNumber) {
+		
+		try {
+			Invoice invoice = bof.getClient().getInvoice(invoiceNumber);
+			if (invoice.getBalance()==0) {
+				// Remove from invoice map
+				invoiceMap.remove(invoice.getDocumentNumber());
+				removeFromReferenceMap(invoice);
+			}
+		} catch (Exception ee) {
+			ee.printStackTrace();
+		}
+		
+	}
+	
+	private void removeFromReferenceMap(Invoice invoice) {
+		
+		String reference = getInvoiceReference(invoice);
+		List<Invoice> invoices = invoiceReferenceMap.get(reference);
+		if (invoices!=null && invoices.size()>0) {
+			int removeIdx = -1;
+			for (int i=0; i<invoices.size(); i++) {
+				if (invoice.getDocumentNumber().equals(invoices.get(i).getDocumentNumber())) {
+					removeIdx = i;
+					break;
+				}
+			}
+			if (removeIdx>=0) {
+				invoices.remove(removeIdx);
+				log.info("Invoice " + invoice.getDocumentNumber() + " with external reference " + reference + " was fully paid and removed from reference map.");
+			}
+		}
+		
+	}
+	
 	/**
 	 * Creates an invoice from order number.
 	 * 
