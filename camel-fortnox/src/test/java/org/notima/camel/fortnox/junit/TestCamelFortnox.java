@@ -13,8 +13,7 @@ public class TestCamelFortnox {
 	
 	protected Logger	log = LoggerFactory.getLogger(this.getClass());	
 	
-	protected String clientSecret;
-	protected String accessToken;
+	protected String orgNo;
 	
 	@Before
 	public void setUp() throws Exception {
