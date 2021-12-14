@@ -15,6 +15,7 @@ import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.FortnoxConstants;
 import org.notima.api.fortnox.clients.FortnoxApiKey;
 import org.notima.api.fortnox.clients.FortnoxClientManager;
+import org.notima.api.fortnox.clients.FortnoxCredentials;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Customer;
 import org.notima.api.fortnox.entities3.Invoice;
@@ -90,7 +91,7 @@ public class FortnoxClient {
 	 * @return	The access token.
 	 * @throws Exception	If something goes wrong.
 	 */
-	public FortnoxApiKey retrieveAccessTokenFromApiCode(
+	public FortnoxCredentials retrieveAccessTokenFromApiCode(
 			@Header(value="clientId")String clientId,
 			@Header(value="clientSecret")String clientSecret, 
 			@Header(value="apiCode")String apiCode) throws Exception {
@@ -98,7 +99,7 @@ public class FortnoxClient {
 		if (clientId==null || clientSecret==null || apiCode==null)
 			return null;
 
-		FortnoxApiKey key = FortnoxOAuth2Client.getAccessToken(clientId, clientSecret, apiCode);
+		FortnoxCredentials key = FortnoxOAuth2Client.getAccessToken(clientId, clientSecret, apiCode);
 		
 		return key;
 		

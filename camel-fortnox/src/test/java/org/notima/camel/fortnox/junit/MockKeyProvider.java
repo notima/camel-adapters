@@ -1,9 +1,9 @@
 package org.notima.camel.fortnox.junit;
 
-import org.notima.api.fortnox.FortnoxKeyProvider;
-import org.notima.api.fortnox.clients.FortnoxApiKey;
+import org.notima.api.fortnox.FortnoxCredentialsProvider;
+import org.notima.api.fortnox.clients.FortnoxCredentials;
 
-public class MockKeyProvider extends FortnoxKeyProvider {
+public class MockKeyProvider extends FortnoxCredentialsProvider {
 
     public MockKeyProvider(String orgNo) {
         super(orgNo);
@@ -11,13 +11,13 @@ public class MockKeyProvider extends FortnoxKeyProvider {
     }
 
     @Override
-    public FortnoxApiKey getKey() throws Exception {
+    public FortnoxCredentials getCredentials() throws Exception {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void setKey(FortnoxApiKey key) throws Exception {
+    public void setCredentials(FortnoxCredentials key) throws Exception {
         // TODO Auto-generated method stub
         
     }
