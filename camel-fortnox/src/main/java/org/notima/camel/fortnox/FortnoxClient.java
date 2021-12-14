@@ -13,8 +13,6 @@ import org.apache.camel.Header;
 import org.notima.api.fortnox.Fortnox4JSettings;
 import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.FortnoxConstants;
-import org.notima.api.fortnox.clients.FortnoxApiKey;
-import org.notima.api.fortnox.clients.FortnoxClientManager;
 import org.notima.api.fortnox.clients.FortnoxCredentials;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Customer;
@@ -79,7 +77,6 @@ public class FortnoxClient {
 	public static String DEFAULT_NEW_SUPPLIER_NAME = "Supplier created by Fortnox4J"; 
 	
 	// Cache functions
-	private FortnoxClientManager clientManager;
 	private String	lastClientOrgNo;
 	private FortnoxAdapter 	bof;
 	
@@ -157,7 +154,6 @@ public class FortnoxClient {
 	 */
 	public List<Invoice> getInvoicesWithPaymentTerm(
 			@Header(value="orgNo")String orgNo,
-			@Header(value="clientManager")FortnoxClientManager clientManager,
 			@Header(value="paymentTerm")String pt) throws Exception {
 		
 		List<Invoice> result = new ArrayList<Invoice>();
