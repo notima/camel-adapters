@@ -123,8 +123,7 @@ public class FortnoxClient {
 	/**
 	 * Keeps a cached business object factory
 	 * 
-	 * @param accessToken
-	 * @param clientSecret
+	 * @param orgNo
 	 * @return	The current FortnoxAdapter (if none is initialized, it's initialized)
 	 * @throws Exception
 	 */
@@ -146,8 +145,7 @@ public class FortnoxClient {
 	/**
 	 * Returns invoices with given payment term.
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param pt
 	 * @return
 	 * @throws Exception
@@ -182,8 +180,7 @@ public class FortnoxClient {
 	/**
 	 * Returns Fortnox invoice
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param invoiceNo
 	 * @return
 	 */
@@ -202,8 +199,7 @@ public class FortnoxClient {
 	/**
 	 * Read company settings.
 	 * 
-	 * @param clientSecret		The client secret
-	 * @param accessToken		The access token
+	 * @param orgNo				OrgNo
 	 * @return					Company settings
 	 * @throws Exception		If something goes wrong
 	 */
@@ -221,8 +217,7 @@ public class FortnoxClient {
 	/**
 	 * Convenience class to get the name of the client
 	 * 
-	 * @param clientSecret		The client secret
-	 * @param accessToken		The access token
+	 * @param orgNo		The orgNo
 	 * @return		The name of the client.
 	 * @throws Exception		If something goes wrong.
 	 */
@@ -270,8 +265,7 @@ public class FortnoxClient {
 	/**
 	 * Returns fortnox invoices using given filter.
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param filter
 	 * @return
 	 * @throws Exception
@@ -303,8 +297,7 @@ public class FortnoxClient {
 	/**
 	 * Gets overdue invoices
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @return
 	 * @throws Exception
 	 */
@@ -329,8 +322,7 @@ public class FortnoxClient {
 	/**
 	 * Invoices action on given invoice
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param invoiceNo
 	 * @param action
 	 * @return
@@ -353,8 +345,7 @@ public class FortnoxClient {
 	/**
 	 * Creates a mapping of invoices using the given reference field. Only unpaid invoices are included.
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param referenceField	Possible values ExternalInvoiceReference1, ExternalInvoiceReference2, 
 	 * 							InvoiceReference, OCR, OrderReference, OurReference, YourOrderNumber, YourReference
 	 * 
@@ -488,8 +479,7 @@ public class FortnoxClient {
 	/**
 	 * Creates a mapping of orders using the given reference field. Only non-invoiced orders are included.
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param referenceField
 	 * @param refRegEx
 	 * @return
@@ -577,8 +567,7 @@ public class FortnoxClient {
 	/**
 	 * Gets the invoice to pay
 	 * 
-	 * @param clientSecret		The client secret
-	 * @param accessToken		The accessToken
+	 * @param orgNo
 	 * @param invoiceRef		The actual invoice reference to look for.
 	 * @param invoiceRefType	What type of reference this is, meaning the field in the invoice where this reference is found.
 	 * 							Possible fields are: invoice or DocumentNumber (equal), ExternalInvoiceReference1,
@@ -668,8 +657,7 @@ public class FortnoxClient {
 	/**
 	 * Pays a customer invoice
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo				Org no
 	 * @param modeOfPayment		Payment Method Code (ie what account is this payment made to, betalningsvillkor)
 	 * @param invoice			The Fortnox invoice to be paid.
 	 * @param bookkeepPayment	If false, the payments are not bookkept (only preliminary).
@@ -824,8 +812,7 @@ public class FortnoxClient {
 	/**
 	 * Persists invoice 
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param invoice
 	 * @return
 	 * @throws Exception
@@ -845,8 +832,7 @@ public class FortnoxClient {
 	/**
 	 * Persists invoice from order
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param order
 	 * @param useArticles			If true, articles are used when creating invoice lines.
 	 * @param invoiceDate			If non null, this date is used as invoice date.
@@ -999,8 +985,7 @@ public class FortnoxClient {
 	/**
 	 * Creates a fee voucher
 	 * 
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param orgNo
 	 * @param acctDate
 	 * @param totalAmount
 	 * @param vatAmount
