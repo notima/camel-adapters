@@ -96,12 +96,13 @@ public class FortnoxClient {
 	public FortnoxCredentials retrieveAccessTokenFromApiCode(
 			@Header(value="clientId")String clientId,
 			@Header(value="clientSecret")String clientSecret, 
-			@Header(value="apiCode")String apiCode) throws Exception {
+			@Header(value="apiCode")String apiCode,
+			@Header(value="redirectUri")String redirectUri) throws Exception {
 		
 		if (clientId==null || clientSecret==null || apiCode==null)
 			return null;
 
-		FortnoxCredentials key = FortnoxOAuth2Client.getAccessToken(clientId, clientSecret, apiCode);
+		FortnoxCredentials key = FortnoxOAuth2Client.getAccessToken(clientId, clientSecret, apiCode, redirectUri);
 		
 		return key;
 		
