@@ -21,5 +21,11 @@ public class MockKeyProvider extends FortnoxCredentialsProvider {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public void removeCredentials() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
     
 }
