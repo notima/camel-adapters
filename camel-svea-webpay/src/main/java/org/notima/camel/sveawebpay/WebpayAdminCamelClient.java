@@ -59,6 +59,7 @@ public class WebpayAdminCamelClient {
 	private String			orgNo;
 	private String			jsonFile;
 	private List<SveaCredential>	credentials;
+	private Map<String,String>		merchantIds;
 	private Map<String, String> accountToMerchantIdMap = new TreeMap<String, String>();
 
 	/**
@@ -504,6 +505,15 @@ public class WebpayAdminCamelClient {
 	public SveaCredential getCheckoutCredential(Long merchantId) {
 		
 		if (merchantId!=null) {
+			if (merchantIds!=null) {
+				String secret = merchantIds.get(Long.toString(merchantId));
+				if (secret!=null) {
+					SveaCredential cr = new SveaCredential();
+					cr.setMerchantId(Long.toString(merchantId));
+					cr.setSecretWord(secret);
+					return cr;
+				}
+			}
 			for (SveaCredential cr : credentials) {
 				if (cr.getMerchantId()!=null && Long.parseLong(cr.getMerchantId()) == merchantId) {
 					return cr;
@@ -535,7 +545,7 @@ public class WebpayAdminCamelClient {
 	 * 
 	 * @return	Returns checkout credentials (if they exist)
 	 */
-	public List<SveaCredential> getCheckoutCredentials(String accountNo) {
+	private List<SveaCredential> getCheckoutCredentials(String accountNo) {
 		
 		SveaCredential sc = null;
 		List<SveaCredential> result = new ArrayList<SveaCredential>();
@@ -554,7 +564,7 @@ public class WebpayAdminCamelClient {
 		// If specified on account, use that
 		if (accountNo!=null) {
 			for (SveaCredential cr : credentials) {
-				if (cr.getAccountNo().equals(accountNo) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
+				if (accountNo.equals(cr.getAccountNo()) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
 					result.add(cr);
 					return result;
 				}
@@ -565,6 +575,14 @@ public class WebpayAdminCamelClient {
 		for (SveaCredential cr : credentials) {
 			if (cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
 				result.add(cr);
+			}
+		}
+		if (result.size()==0 && merchantIds!=null) {
+			for (String mid : merchantIds.keySet()) {
+				sc = new SveaCredential();
+				sc.setMerchantId(mid);
+				sc.setSecretWord(merchantIds.get(mid));
+				result.add(sc);
 			}
 		}
 		
@@ -903,6 +921,20 @@ public class WebpayAdminCamelClient {
 	public void setJsonFile(String jsonFile) {
 		this.jsonFile = jsonFile;
 	}
+
+	public Map<String, String> getMerchantIds() {
+		return merchantIds;
+	}
+
+	public void setMerchantIds(Map<String, String> merchantIds) {
+		this.merchantIds = merchantIds;
+	}
+
+	public void setCredentials(List<SveaCredential> credentials) {
+		this.credentials = credentials;
+	}
+	
+	
 	
 	
 	
