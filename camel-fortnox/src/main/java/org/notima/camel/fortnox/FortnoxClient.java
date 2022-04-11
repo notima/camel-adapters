@@ -403,6 +403,11 @@ public class FortnoxClient {
 			for (InvoiceSubset ii : subsetList) {
 				i = bof.getClient().getInvoice(ii.getDocumentNumber());
 				
+				if (i.getBalance()!=null && i.getBalance().equals(Double.valueOf(0))) {
+					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no open balance. Skipping.");
+					continue;
+				}
+				
 				refInFortnox = getInvoiceReference(i);
 
 				// Apply regex if needed
