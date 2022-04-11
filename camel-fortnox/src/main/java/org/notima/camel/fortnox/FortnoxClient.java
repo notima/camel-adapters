@@ -1007,7 +1007,8 @@ public class FortnoxClient {
 			@Header(value="srcAccount")String srcAccount,
 			@Header(value="vatAccount")String vatAccount,
 			@Header(value="feeDescription")String description,
-			@Header(value="voucherSeries")String voucherSeries
+			@Header(value="voucherSeries")String voucherSeries,
+			@Header(value="costCenter")String costCenter
 			) throws Exception {
 
 		Date trxDate = null;
@@ -1027,7 +1028,8 @@ public class FortnoxClient {
 				vatAccount, 
 				(double)totalAmount, 
 				(double)vatAmount, 
-				description);
+				description,
+				costCenter);
 
 		bof = getFortnoxAdapter(orgNo);
 		
