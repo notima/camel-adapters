@@ -762,6 +762,8 @@ public class FortnoxClient {
 
 	private void removeFromInvoiceMapIfFullyPaid(String invoiceNumber) {
 		
+		if (invoiceMap==null || invoiceMap.isEmpty()) return;
+		
 		try {
 			Invoice invoice = bof.getClient().getInvoice(invoiceNumber);
 			if (invoice.getBalance()==0) {
