@@ -870,7 +870,7 @@ public class FortnoxClient {
 		org.notima.generic.businessobjects.Invoice invoice = bbc.toInvoice(order);
 		
 		Customer fortnoxCustomer = persistCustomerFromCanonical(orgNo, order.getBusinessPartner());
-		invoice.setBusinessPartner(FortnoxAdapter.convert(fortnoxCustomer));
+		invoice.setBusinessPartner(FortnoxAdapter.convertToBusinessPartner(fortnoxCustomer));
 		if (invoiceDate!=null) {
 			invoice.setInvoiceDate(invoiceDate);
 		}
@@ -935,7 +935,7 @@ public class FortnoxClient {
 		}
 		if (result==null) {
 			// Customer doesn't exist
-			result = bof.getClient().setCustomer(bof.convert(bp));
+			result = bof.getClient().setCustomer(bof.convertFromBusinessPartner(bp));
 		}
 
 		return result;
