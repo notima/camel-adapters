@@ -313,7 +313,7 @@ public class FortnoxClient {
 		
 		if (finvoices!=null) {
 			for (org.notima.api.fortnox.entities3.Invoice ii : finvoices)
-			result.add(FortnoxAdapter.convert(ii));
+			result.add(FortnoxAdapter.convertToCanonicalInvoice(ii));
 		}
 		
 		return result;
