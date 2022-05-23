@@ -564,7 +564,7 @@ public class WebpayAdminCamelClient {
 		// If specified on account, use that
 		if (accountNo!=null) {
 			for (SveaCredential cr : credentials) {
-				if (accountNo.equals(cr.getAccountNo()) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
+				if (accountNo.equals(cr.getAccountNo()) && cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4 && !hasMerchantIdInMap(cr.getMerchantId())) {
 					result.add(cr);
 					return result;
 				}
@@ -574,10 +574,11 @@ public class WebpayAdminCamelClient {
 		// If not found on specified account, try any
 		for (SveaCredential cr : credentials) {
 			if (cr.getMerchantId()!=null && cr.getMerchantId().trim().length()>4) {
-				result.add(cr);
+				if (!hasMerchantIdInMap(cr.getMerchantId()))
+						result.add(cr);
 			}
 		}
-		if (result.size()==0 && merchantIds!=null) {
+		if (merchantIds!=null) {
 			for (String mid : merchantIds.keySet()) {
 				sc = new SveaCredential();
 				sc.setMerchantId(mid);
@@ -588,6 +589,12 @@ public class WebpayAdminCamelClient {
 		
 		return result;
 	}
+	
+	private boolean hasMerchantIdInMap(String merchantId) {
+		if (merchantIds==null) return false;
+		return merchantIds.containsKey(merchantId);
+	}
+	
 	
 	/**
 	 * @param	accountNo	AccountNo if there are many merchantIds to choose from. Can be null.
