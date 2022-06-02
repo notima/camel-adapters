@@ -18,9 +18,8 @@ public class TestReadSettingsFromSupplier extends TestCamelFortnox {
 	public void testPersistInvoiceFromOrder() {
 
 		try {
-			String configFile = ClassLoader.getSystemResource("test-config.xml").getFile();
 			
-			FortnoxClient3 cl3 = new FortnoxClient3(configFile, new MockKeyProvider(orgNo));
+			FortnoxClient3 cl3 = new FortnoxClient3(new MockKeyProvider(orgNo));
 			
 			Fortnox4JSettings set = new Fortnox4JSettings(cl3);
 			

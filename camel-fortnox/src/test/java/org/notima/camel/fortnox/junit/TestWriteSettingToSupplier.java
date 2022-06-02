@@ -18,9 +18,8 @@ public class TestWriteSettingToSupplier extends TestCamelFortnox {
 	public void testPersistInvoiceFromOrder() {
 
 		try {
-			String configFile = ClassLoader.getSystemResource("test-config.xml").getFile();
 			
-			FortnoxClient3 client = new FortnoxClient3(configFile, new MockKeyProvider(orgNo));
+			FortnoxClient3 client = new FortnoxClient3(new MockKeyProvider(orgNo));
 			
 			Fortnox4JSettings settings = new Fortnox4JSettings(client);
 
@@ -31,7 +30,7 @@ public class TestWriteSettingToSupplier extends TestCamelFortnox {
 			
 			
 			if (supplier==null) {
-				FortnoxClient3 fc = new FortnoxClient3(configFile, new MockKeyProvider(orgNo));
+				FortnoxClient3 fc = new FortnoxClient3(new MockKeyProvider(orgNo));
 				CompanySetting cs = fc.getCompanySetting();
 				
 				log.warn("Supplier {} doesn't exist in client {}. Can't validate TestWriteSettingToSupplier.", DEFAULT_TEST_SUPPLIER_ORGNO, cs.getName());
