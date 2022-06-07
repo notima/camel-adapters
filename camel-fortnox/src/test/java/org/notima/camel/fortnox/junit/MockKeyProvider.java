@@ -1,5 +1,7 @@
 package org.notima.camel.fortnox.junit;
 
+import java.util.List;
+
 import org.notima.api.fortnox.FortnoxCredentialsProvider;
 import org.notima.api.fortnox.clients.FortnoxCredentials;
 
@@ -27,5 +29,17 @@ public class MockKeyProvider extends FortnoxCredentialsProvider {
         // TODO Auto-generated method stub
         
     }
+
+	@Override
+	public List<FortnoxCredentials> getAllCredentials() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeCredential(FortnoxCredentials removeThis) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
     
 }
