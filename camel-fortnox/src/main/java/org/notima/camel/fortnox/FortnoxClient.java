@@ -650,8 +650,10 @@ public class FortnoxClient {
 		// Get the invoice if there's an invoice no but not found in the invoice map.
 		if (invoiceNo!=null && invoices==null) {
 			Invoice invoice = bof.getClient().getInvoice(invoiceNo);
-			invoices = new ArrayList<Invoice>();
-			invoices.add(invoice);
+			if (invoice!=null) {
+				invoices = new ArrayList<Invoice>();
+				invoices.add(invoice);
+			}
 		}
 		
 		return invoices;
