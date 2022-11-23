@@ -15,6 +15,7 @@ import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.FortnoxConstants;
 import org.notima.api.fortnox.clients.FortnoxCredentials;
 import org.notima.api.fortnox.entities3.CompanySetting;
+import org.notima.api.fortnox.entities3.Currency;
 import org.notima.api.fortnox.entities3.Customer;
 import org.notima.api.fortnox.entities3.Invoice;
 import org.notima.api.fortnox.entities3.InvoicePayment;
@@ -82,6 +83,8 @@ public class FortnoxClient {
 	
 	private Logger log = LoggerFactory.getLogger(FortnoxClient.class);
 	
+	private Map<String, Currency> currencies = new TreeMap<String, Currency>();
+	
 
 	/**
 	 * Retrieves access token if possible
@@ -141,6 +144,10 @@ public class FortnoxClient {
 		}
 		
 		return bof;
+	}
+	
+	public FortnoxClient3 getCurrentFortnoxClient() {
+		return bof.getClient();
 	}
 	
 	/**
@@ -751,6 +758,20 @@ public class FortnoxClient {
 			return pmt;
 		}
 		
+		// Blank the currency field since it's read-only
+		if (!pmt.isDefaultAccountingCurrency()) {
+			// Get currency rate if not set
+			if (!pmt.hasCurrencyRate()) {
+				Currency currency = getCurrency(pmt.getCurrency());
+				if (currency!=null) {
+					pmt.setCurrencyRate(currency.getBuyRate());
+				}
+			}
+			pmt.currencyConvertBeforeCreation();
+		}
+		// Clear currency field
+		pmt.setCurrency(null);
+		
 		pmt = bof.getClient().setCustomerPayment(pmt);
 
 		// Book the payment directly if account and mode of payment is set.
@@ -761,7 +782,19 @@ public class FortnoxClient {
 		
 		return pmt;
 	}
-
+	
+	private Currency getCurrency(String code) throws Exception {
+		code = code.toUpperCase();
+		Currency currency = currencies.get(code);
+		if (currency==null) {
+			currency = getCurrentFortnoxClient().getCurrency(code);
+			if (currency!=null) {
+				currencies.put(code, currency);
+			}
+		}
+		return currency;
+	}
+	
 	private void removeFromInvoiceMapIfFullyPaid(String invoiceNumber) {
 		
 		if (invoiceMap==null || invoiceMap.isEmpty()) return;
