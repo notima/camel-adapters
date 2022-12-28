@@ -408,7 +408,7 @@ public class WebpayAdminCamelClient {
 		Order<?> result = null;
 		
 		for (SveaCredential ss : crList) {
-			sof.addCredential(ss.getServer(), ss.getMerchantId(), ss.getSecretWord());
+			sof.addCredential(ss.getServer(), ss.getOrgNo(), ss.getMerchantId(), ss.getSecretWord());
 		
 		}
 		result = sof.lookupOrder(checkoutOrderId);
@@ -627,7 +627,7 @@ public class WebpayAdminCamelClient {
 		
 		// Find the credential for checkout
 		SveaCredential cr = getCheckoutCredential(merchantId);
-		client.init(cr.getServer(), cr.getMerchantId(), cr.getSecretWord());
+		client.init(cr.getServer(), cr.getOrgNo(), cr.getMerchantId(), cr.getSecretWord());
 		
 		String result = client.deliverCompleteOrder(Long.parseLong(checkoutOrderNo));
 		
@@ -912,11 +912,12 @@ public class WebpayAdminCamelClient {
 	 */
 	public SveaPmtAdminBusinessObjectFactory createSveaPmtAdminBusinessObjectFactory(
 			@Header(value="serverName")String serverName, 
+			@Header(value="orgNo")String orgNo,
 			@Header(value="merchantId")String merchantId, 
 			@Header(value="secretWord")String secretWord) {
 		
 		SveaPmtAdminBusinessObjectFactory f = new SveaPmtAdminBusinessObjectFactory();
-		f.addCredential(serverName, merchantId, secretWord);
+		f.addCredential(serverName, orgNo, merchantId, secretWord);
 		return f;
 		
 	}
