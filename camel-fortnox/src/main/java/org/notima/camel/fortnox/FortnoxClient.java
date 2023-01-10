@@ -917,13 +917,29 @@ public class FortnoxClient {
 		return result;
 		
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+
+	@SuppressWarnings("rawtypes")
 	public org.notima.api.fortnox.entities3.Customer persistCustomerFromCanonical(
 			@Header(value="orgNo")String orgNo,
 			@Header(value="businessPartner")org.notima.generic.businessobjects.BusinessPartner bp 
 			) throws Exception {
-		
+
+		Customer result = lookupExistingCustomerUsingCanonical(orgNo, bp);
+		if (result==null) {
+			// Customer doesn't exist
+			result = bof.getClient().setCustomer(FortnoxAdapter.convertFromBusinessPartner(bp));
+		}
+
+		return result;
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	public org.notima.api.fortnox.entities3.Customer lookupExistingCustomerUsingCanonical(
+			@Header(value="orgNo")String orgNo,
+			@Header(value="businessPartner")org.notima.generic.businessobjects.BusinessPartner bp 
+		)  throws Exception {
+
 		bof = getFortnoxAdapter(orgNo);
 		
 		Customer result = null;
@@ -968,13 +984,10 @@ public class FortnoxClient {
 			}
 			// TODO: Update customer information if necessary
 		}
-		if (result==null) {
-			// Customer doesn't exist
-			result = bof.getClient().setCustomer(bof.convertFromBusinessPartner(bp));
-		}
-
 		return result;
+		
 	}
+	
 	
 	/**
 	 * Creates an account transfer voucher
