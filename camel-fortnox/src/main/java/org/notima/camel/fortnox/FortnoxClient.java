@@ -31,6 +31,7 @@ import org.notima.api.fortnox.entities3.WriteOffs;
 import org.notima.api.fortnox.oauth2.FortnoxOAuth2Client;
 import org.notima.businessobjects.adapter.fortnox.FortnoxAdapter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
+import org.notima.businessobjects.adapter.fortnox.FortnoxExtendedClient;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
 import org.slf4j.Logger;
@@ -999,6 +1000,7 @@ public class FortnoxClient {
 	 * @param debitAcct
 	 * @param description
 	 * @param voucherSeries
+	 * @param srcCurrency
 	 * @return
 	 * @throws Exception
 	 */
@@ -1009,7 +1011,8 @@ public class FortnoxClient {
 		@Header(value="creditAcct")String creditAcct,
 		@Header(value="debitAcct")String debitAcct,
 		@Header(value="transferDescription")String description,
-		@Header(value="voucherSeries")String voucherSeries
+		@Header(value="voucherSeries")String voucherSeries,
+		@Header(value="srcCurrency")String srcCurrency
 		) throws Exception {
 	
 		Date trxDate = null;
@@ -1031,8 +1034,8 @@ public class FortnoxClient {
 
 		bof = getFortnoxAdapter(orgNo);
 		
-		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
-		voucher = client.setVoucher(voucher);
+		FortnoxExtendedClient fec = new FortnoxExtendedClient(bof);
+		voucher = fec.accountFortnoxVoucher(voucher, srcCurrency, 0);
 		
 		return voucher.getVoucherSeries() + voucher.getVoucherNumber();
 		
@@ -1050,6 +1053,7 @@ public class FortnoxClient {
 	 * @param vatAccount
 	 * @param description
 	 * @param voucherSeries
+	 * @param srcCurrency		The source currency of the voucher.
 	 * @return
 	 * @throws Exception	if something goes wrong.
 	 */
@@ -1063,7 +1067,8 @@ public class FortnoxClient {
 			@Header(value="vatAccount")String vatAccount,
 			@Header(value="feeDescription")String description,
 			@Header(value="voucherSeries")String voucherSeries,
-			@Header(value="costCenter")String costCenter
+			@Header(value="costCenter")String costCenter,
+			@Header(value="srcCurrency")String srcCurrency
 			) throws Exception {
 
 		Date trxDate = null;
@@ -1087,9 +1092,8 @@ public class FortnoxClient {
 				costCenter);
 
 		bof = getFortnoxAdapter(orgNo);
-		
-		FortnoxClient3 client = (FortnoxClient3)bof.getClient();
-		voucher = client.setVoucher(voucher);
+		FortnoxExtendedClient fec = new FortnoxExtendedClient(bof);
+		voucher = fec.accountFortnoxVoucher(voucher, srcCurrency, 0);
 		
 		return voucher.getVoucherSeries() + voucher.getVoucherNumber();
 		
