@@ -976,7 +976,7 @@ public class FortnoxClient {
 			try {
 				result = bof.getClient().getCustomerByTaxId(bp.getTaxId(), bp.isCompany());
 			} catch (Exception e) {
-				if (!e.getMessage().contains(bof.getClient().formatTaxId(bp.getTaxId(), bp.isCompany()))) {
+				if (e.getMessage()==null || !e.getMessage().contains(FortnoxClient3.formatTaxId(bp.getTaxId(), bp.isCompany()))) {
 					// The message contains the taxId if not found.
 					throw e;
 				} else {
