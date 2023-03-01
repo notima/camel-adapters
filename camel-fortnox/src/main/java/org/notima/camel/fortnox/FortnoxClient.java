@@ -13,6 +13,8 @@ import org.apache.camel.Header;
 import org.notima.api.fortnox.Fortnox4JSettings;
 import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.FortnoxConstants;
+import org.notima.api.fortnox.FortnoxInvoiceException;
+import org.notima.api.fortnox.FortnoxScopeException;
 import org.notima.api.fortnox.clients.FortnoxCredentials;
 import org.notima.api.fortnox.entities3.CompanySetting;
 import org.notima.api.fortnox.entities3.Currency;
@@ -883,6 +885,8 @@ public class FortnoxClient {
 	 * @param defaultRevenueAccount	If set, this is used as default revenue account for the invoice.
 	 * @return
 	 * @throws Exception
+	 * @throws FortnoxInvoiceException
+	 * @throws FortnoxScopeException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public org.notima.generic.businessobjects.Invoice persistInvoiceFromCanoncialOrder(
@@ -891,7 +895,7 @@ public class FortnoxClient {
 			@Header(value="useArticles")Boolean useArticles,
 			@Header(value="invoiceDate")Date invoiceDate,
 			@Header(value="defaultRevenueAccount")String defaultRevenueAccount
-			) throws Exception {
+			) throws FortnoxInvoiceException, FortnoxScopeException, Exception {
 		
 		if (order==null || order.getLines()==null || order.getLines().size()==0) {
 			throw new Exception("Can't persist invoice from order. The order is either null or missing order lines");
