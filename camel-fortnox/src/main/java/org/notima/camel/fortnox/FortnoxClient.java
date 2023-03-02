@@ -13,6 +13,7 @@ import org.apache.camel.Header;
 import org.notima.api.fortnox.Fortnox4JSettings;
 import org.notima.api.fortnox.FortnoxClient3;
 import org.notima.api.fortnox.FortnoxConstants;
+import org.notima.api.fortnox.FortnoxException;
 import org.notima.api.fortnox.FortnoxInvoiceException;
 import org.notima.api.fortnox.FortnoxScopeException;
 import org.notima.api.fortnox.clients.FortnoxCredentials;
@@ -1007,6 +1008,8 @@ public class FortnoxClient {
 	 * @param srcCurrency
 	 * @return
 	 * @throws Exception
+	 * @throws FortnoxException	if something goes wrong.
+	 * @throws FortnoxScopeException	if something goes wrong.
 	 */
 	public String accountTransfer(
 		@Header(value="orgNo")String orgNo, 
@@ -1017,7 +1020,7 @@ public class FortnoxClient {
 		@Header(value="transferDescription")String description,
 		@Header(value="voucherSeries")String voucherSeries,
 		@Header(value="srcCurrency")String srcCurrency
-		) throws Exception {
+		) throws Exception, FortnoxException, FortnoxScopeException {
 	
 		Date trxDate = null;
 		if (acctDate==null) {
@@ -1060,6 +1063,8 @@ public class FortnoxClient {
 	 * @param srcCurrency		The source currency of the voucher.
 	 * @return
 	 * @throws Exception	if something goes wrong.
+	 * @throws FortnoxException	if something goes wrong.
+	 * @throws FortnoxScopeException	if something goes wrong.
 	 */
 	public String accountFee (
 			@Header(value="orgNo")String orgNo, 
@@ -1073,7 +1078,7 @@ public class FortnoxClient {
 			@Header(value="voucherSeries")String voucherSeries,
 			@Header(value="costCenter")String costCenter,
 			@Header(value="srcCurrency")String srcCurrency
-			) throws Exception {
+			) throws FortnoxException, FortnoxScopeException, Exception {
 
 		Date trxDate = null;
 		if (acctDate==null) {
