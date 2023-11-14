@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.camel.Header;
+import org.notima.businessobjects.adapter.infometric.BillingFileToInvoiceList;
 import org.notima.businessobjects.adapter.infometric.InfometricAdapter;
 import org.notima.generic.businessobjects.InvoiceList;
 
@@ -26,7 +27,7 @@ public class InfometricClient {
 								@Header(value="invoiceLineText")String invoiceLineText, 
 								String fileContent) throws IOException, ParseException        {
 	
-		InfometricAdapter ia = new InfometricAdapter();
+		BillingFileToInvoiceList ia = new BillingFileToInvoiceList(null,null);
 		return (ia.splitBillingFile(productKey, unitPrice, invoiceLineText, fileContent));
 	}
 	
