@@ -805,10 +805,13 @@ public class FortnoxClient {
 		
 		try {
 			Invoice invoice = bof.getClient().getInvoice(invoiceNumber);
-			if (invoice.getBalance()==0) {
+			if (invoice!=null && invoice.getBalance()==0) {
 				// Remove from invoice map
 				invoiceMap.remove(invoice.getDocumentNumber());
 				removeFromReferenceMap(invoice);
+			}
+			if (invoice==null) {
+				log.warn("Invoice " + invoiceNumber + " not found when trying to remove from invoice map.");
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
