@@ -1,13 +1,18 @@
 package org.notima.camel.ubl;
 
-import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
-import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
 import org.notima.generic.businessobjects.Invoice;
 import org.notima.generic.ubl.factory.UBL21Converter;
 import org.notima.util.NotimaUtil;
+
+import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.DocumentReferenceType;
+import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.OrderReferenceType;
+import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
+import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 public class UblCamelClient {
 
@@ -96,5 +101,41 @@ public class UblCamelClient {
 		return dst;
 		
 	}
+	public InvoiceType addPaymentReferences(
+			@Header("contractReference")String contractReference,
+			@Header("paymentReference")String paymentReference,
+			@Header("POReference")String POReference,
+			@Body InvoiceType dst) {
+		
+		if (dst==null) {
+			System.err.println("NOOOOOO INVOICE");
+			return null;
+		}
+		
+		if (dst.getIDValue()==null) {
+			System.err.println("NOOOOOO IDVALUE");
+		}
+	
+		if (paymentReference!=null && paymentReference.trim().length()>1) {
+			dst.setBuyerReference(paymentReference);
+		}
+		
+	
+		if (POReference!=null && POReference.trim().length()>1) {
+			OrderReferenceType orderRfType = new OrderReferenceType();
+			orderRfType.setID(POReference);
+			dst.setOrderReference(orderRfType);			
+		}
+
+		if (contractReference!=null && contractReference.trim().length()>1) {
+			DocumentReferenceType rfType =  new DocumentReferenceType();
+			rfType.setID(contractReference);
+			List<DocumentReferenceType> lstRfType = Arrays.asList(rfType);
+			dst.setContractDocumentReference(lstRfType);			
+		}
+		
+		return dst;
+		
+	}	
 	
 }
