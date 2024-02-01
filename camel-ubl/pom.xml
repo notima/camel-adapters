@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.7</version>
   </parent>
   <artifactId>camel-ubl</artifactId>
   <packaging>bundle</packaging>
@@ -39,7 +39,7 @@
 						</Export-Package>
 						<Import-Package>org.notima.generic.ubl.factory,
 										org.apache.camel,
-										org.notima.bg,
+										org.notima.util,
 										org.notima.generic.businessobjects,
 										org.notima.generic.businessobjects.util,
 										org.notima.generic.ifacebusinessobjects,
