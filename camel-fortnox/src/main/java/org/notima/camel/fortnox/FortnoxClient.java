@@ -37,6 +37,7 @@ import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxExtendedClient;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
+import org.notima.generic.businessobjects.TaxSubjectIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,9 @@ public class FortnoxClient {
 	
 	// Invoice Map mapping relevant key to invoice
 	private Map<String,List<Invoice>>	invoiceReferenceMap;
+	
+	private TaxSubjectInvoiceMapper		taxSubjectInvoiceMapper;
+	
 	// Order Map mapping relevant key to order
 	private Map<String,Order> orderMap;
 	// Access Token associated with the maps
@@ -145,6 +149,10 @@ public class FortnoxClient {
 		if (bof==null) {
 			bof = new FortnoxAdapter(orgNo);
 			lastClientOrgNo = orgNo;
+		}
+		
+		if (taxSubjectInvoiceMapper==null || !taxSubjectInvoiceMapper.isFortnoxClientOrgNo(orgNo)) {
+			taxSubjectInvoiceMapper = new TaxSubjectInvoiceMapper(orgNo);
 		}
 		
 		return bof;
@@ -418,6 +426,9 @@ public class FortnoxClient {
 					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no open balance. Skipping.");
 					continue;
 				}
+				
+				// Add to tax subject map
+				taxSubjectInvoiceMapper.addInvoice(i);
 				
 				refInFortnox = getInvoiceReference(i);
 
