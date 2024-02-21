@@ -1,17 +1,23 @@
 # camel-adapters
-Apache Camel adapters for various formats and systems
+Apache Camel adapters for various formats and systems.
 
-## Installation
+Depends on https://github.com/notima/businessObjectAdapters
+
+## Installation in Karaf
 
 In karaf shell
 
 ```
-feature:repo-add mvn:org.notima.camel-adapters/camel-feature/LATEST/xml/features
+feature:repo-add mvn:org.notima.camel-adapters/camel-feature/0.0.8-SNAPSHOT/xml/features
 feature:install camel-fortnox4j
 feature:install camel-sveawebpay
 feature:install camel-ubl
 feature:install camel-infometric
 ```
+
+## Make a redeployable kar in Karaf
+
+	kar:create camel-notima-utils-0.0.8-SNAPSHOT
 
 ### Snapshots
 
