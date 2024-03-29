@@ -37,7 +37,6 @@ import org.notima.businessobjects.adapter.fortnox.FortnoxConverter;
 import org.notima.businessobjects.adapter.fortnox.FortnoxExtendedClient;
 import org.notima.generic.businessobjects.BasicBusinessObjectConverter;
 import org.notima.generic.businessobjects.Payment;
-import org.notima.generic.businessobjects.TaxSubjectIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -893,8 +892,8 @@ public class FortnoxClient {
 	/**
 	 * Persists invoice from order
 	 * 
-	 * @param orgNo
-	 * @param order
+	 * @param orgNo					The org no of the Fortnox client.
+	 * @param order					Order number.
 	 * @param useArticles			If true, articles are used when creating invoice lines.
 	 * @param invoiceDate			If non null, this date is used as invoice date.
 	 * @param defaultRevenueAccount	If set, this is used as default revenue account for the invoice.
