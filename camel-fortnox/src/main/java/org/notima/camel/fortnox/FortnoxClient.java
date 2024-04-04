@@ -320,6 +320,7 @@ public class FortnoxClient {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<org.notima.generic.businessobjects.Invoice> getOverdueInvoices(
 		@Header(value="orgNo")String orgNo
 			) throws Exception {
@@ -327,7 +328,7 @@ public class FortnoxClient {
 		List<org.notima.generic.businessobjects.Invoice> result = new ArrayList<org.notima.generic.businessobjects.Invoice>();
 		
 		List<org.notima.api.fortnox.entities3.Invoice> finvoices = getFortnoxInvoices(
-				orgNo, FortnoxClient3.FILTER_UNPAID_OVERDUE);
+				orgNo, FortnoxConstants.FILTER_UNPAID_OVERDUE);
 		
 		if (finvoices!=null) {
 			for (org.notima.api.fortnox.entities3.Invoice ii : finvoices)
@@ -388,9 +389,9 @@ public class FortnoxClient {
 			invoiceReferenceMap = new TreeMap<String, List<Invoice>>();
 			invoiceMap = new TreeMap<String, Invoice>();
 			
-			Invoices invoices = bof.getClient().getInvoices(FortnoxClient3.FILTER_UNPAID);
+			Invoices invoices = bof.getClient().getInvoices(FortnoxConstants.FILTER_UNPAID);
 			// Get unposted as well
-			Invoices unposted = bof.getClient().getInvoices(FortnoxClient3.FILTER_UNBOOKED);
+			Invoices unposted = bof.getClient().getInvoices(FortnoxConstants.FILTER_UNBOOKED);
 			
 			List<InvoiceSubset> subsetList = invoices.getInvoiceSubset();
 			if (subsetList!=null) {
@@ -523,7 +524,7 @@ public class FortnoxClient {
 			
 			orderMap = new TreeMap<String, Order>();
 			
-			Orders orders = bof.getClient().getOrders(FortnoxClient3.FILTER_INVOICENOTCREATED);
+			Orders orders = bof.getClient().getOrders(FortnoxConstants.FILTER_INVOICENOTCREATED);
 			
 			List<OrderSubset> subsetList = orders.getOrderSubset();
 			if (subsetList==null)
@@ -743,7 +744,7 @@ public class FortnoxClient {
 				WriteOff wo = new WriteOff();
 				wo.setCurrency(pmt.getCurrency());
 				wo.setAmount(-diff);
-				wo.setAccountNumber(bof.getRevenueAccount(FortnoxClient3.ACCT_ROUNDING));
+				wo.setAccountNumber(bof.getRevenueAccount(FortnoxConstants.ACCT_ROUNDING));
 				if (pmt.getWriteOffs()==null) {
 					WriteOffs wofs = new WriteOffs();
 					pmt.setWriteOffs(wofs);
@@ -763,7 +764,7 @@ public class FortnoxClient {
 		}
 		
 		if (!invoice.isBooked()) {
-			bof.getClient().performAction(true, "invoice", Integer.toString(pmt.getInvoiceNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
+			bof.getClient().performAction(true, "invoice", Integer.toString(pmt.getInvoiceNumber()), FortnoxConstants.ACTION_INVOICE_BOOKKEEP);
 		}
 		
 		// Make sure the payment isn't empty
@@ -790,7 +791,7 @@ public class FortnoxClient {
 
 		// Book the payment directly if account and mode of payment is set.
 		if (bookkeepPayment.booleanValue() && pmt!=null && pmt.getModeOfPayment()!=null && pmt.getModeOfPaymentAccount()!=null && pmt.getModeOfPaymentAccount()>0) {
-			bof.getClient().performAction(true, "invoicepayment", Integer.toString(pmt.getNumber()), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
+			bof.getClient().performAction(true, "invoicepayment", Integer.toString(pmt.getNumber()), FortnoxConstants.ACTION_INVOICE_BOOKKEEP);
 			removeFromInvoiceMapIfFullyPaid(pmt.getInvoiceNumber().toString());
 		}
 		
@@ -860,11 +861,11 @@ public class FortnoxClient {
 	 */
 	private Order createInvoiceFromOrderNo(FortnoxAdapter bof, String orderNo, Date invoiceDate) throws Exception {
 		
-		Order result = bof.getClient().orderPutAction(orderNo, FortnoxClient3.ACTION_ORDER_CREATEINVOICE);
+		Order result = bof.getClient().orderPutAction(orderNo, FortnoxConstants.ACTION_ORDER_CREATEINVOICE);
 		Invoice invoice = bof.getClient().getInvoice(result.getInvoiceReference());
 		invoice.setInvoiceDate(FortnoxClient3.s_dfmt.format(invoiceDate));
 		bof.persistNativeInvoice(invoice);
-		bof.getClient().performAction(true, "invoice", invoice.getDocumentNumber(), FortnoxClient3.ACTION_INVOICE_BOOKKEEP);
+		bof.getClient().performAction(true, "invoice", invoice.getDocumentNumber(), FortnoxConstants.ACTION_INVOICE_BOOKKEEP);
 		return result;
 		
 	}
