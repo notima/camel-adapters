@@ -909,17 +909,15 @@ public class FortnoxClient {
 			@Header(value="canonicalOrder")org.notima.generic.businessobjects.Order order,
 			@Header(value="useArticles")Boolean useArticles,
 			@Header(value="invoiceDate")Date invoiceDate,
-			@Header(value="defaultRevenueAccount")String defaultRevenueAccount
+			@Header(value="debugAdapter")boolean debugAdapter
 			) throws FortnoxInvoiceException, FortnoxScopeException, Exception {
 		
 		if (order==null || order.getLines()==null || order.getLines().size()==0) {
 			throw new Exception("Can't persist invoice from order. The order is either null or missing order lines");
 		}
 
-		bof = getFortnoxAdapter(orgNo);		
-
-		if (defaultRevenueAccount!=null)
-			bof.setDefaultRevenueAccount(defaultRevenueAccount);
+		bof = getFortnoxAdapter(orgNo);
+		bof.setDebug(debugAdapter);
 		
 		BasicBusinessObjectConverter<Object, Object> bbc = new BasicBusinessObjectConverter();
 		org.notima.generic.businessobjects.Invoice invoice = bbc.toInvoice(order);

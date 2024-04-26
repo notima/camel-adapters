@@ -25,7 +25,7 @@ public class TestPersistInvoiceFromOrder extends TestCamelFortnox {
 			Order order = JAXB.unmarshal(new FileReader(orderUrl.getFile()), Order.class);
 			
 			FortnoxClient client = new FortnoxClient();
-			client.persistInvoiceFromCanoncialOrder(orgNo, order, Boolean.FALSE, order.getDocumentDate(), "3051");
+			client.persistInvoiceFromCanoncialOrder(orgNo, order, Boolean.FALSE, order.getDocumentDate(), true);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
