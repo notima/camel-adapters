@@ -5,7 +5,7 @@ import java.text.ParseException;
 
 import org.apache.camel.Header;
 import org.notima.businessobjects.adapter.infometric.BillingFileToInvoiceList;
-import org.notima.businessobjects.adapter.infometric.InfometricAdapter;
+import org.notima.businessobjects.adapter.infometric.InfometricTenantSettings;
 import org.notima.generic.businessobjects.InvoiceList;
 
 public class InfometricClient {
@@ -28,7 +28,9 @@ public class InfometricClient {
 								String fileContent) throws IOException, ParseException        {
 	
 		BillingFileToInvoiceList ia = new BillingFileToInvoiceList(null,null);
-		return (ia.splitBillingFile(productKey, unitPrice, invoiceLineText, fileContent));
+		InfometricTenantSettings settings = new InfometricTenantSettings();
+		settings.addProductMapping(InfometricTenantSettings.DEFAULT_PRODUCT, productKey, invoiceLineText);
+		return (ia.splitBillingFile(settings, unitPrice, fileContent));
 	}
 	
 }
