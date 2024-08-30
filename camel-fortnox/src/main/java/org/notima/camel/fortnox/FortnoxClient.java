@@ -68,7 +68,8 @@ public class FortnoxClient {
 	// Invoice Map mapping relevant key to invoice
 	private Map<String,List<Invoice>>	invoiceReferenceMap;
 	
-	private TaxSubjectInvoiceMapper		taxSubjectInvoiceMapper;
+	// Invoice reference mapper
+	private InvoiceReferenceMapper		invoiceMapper;
 	
 	// Order Map mapping relevant key to order
 	private Map<String,Order> orderMap;
@@ -150,8 +151,8 @@ public class FortnoxClient {
 			lastClientOrgNo = orgNo;
 		}
 		
-		if (taxSubjectInvoiceMapper==null || !taxSubjectInvoiceMapper.isFortnoxClientOrgNo(orgNo)) {
-			taxSubjectInvoiceMapper = new TaxSubjectInvoiceMapper(orgNo);
+		if (invoiceMapper==null || !invoiceMapper.isFortnoxClientOrgNo(orgNo)) {
+			invoiceMapper = new InvoiceReferenceMapper(bof);
 		}
 		
 		return bof;
@@ -363,119 +364,35 @@ public class FortnoxClient {
 	}
 	
 	/**
-	 * Creates a mapping of invoices using the given reference field. Only unpaid invoices are included.
+	 * New method aimed to replace getInvoiceMap
 	 * 
-	 * @param orgNo
 	 * @param referenceField	Possible values ExternalInvoiceReference1, ExternalInvoiceReference2, 
 	 * 							InvoiceReference, OCR, OrderReference, OurReference, YourOrderNumber, YourReference
 	 * 
-	 * @see org.notima.api.fortnox.FortnoxConstants
+	 * 							This field can be comma separated to search more than one field.
+	 * @param invoiceRefRegEx
+	 * @param reference
 	 * @return
+	 * @throws Exception
 	 */
-	public Map<String,List<Invoice>> getInvoiceMap(String orgNo, String referenceField, String invoiceRefRegEx) throws Exception {
+	private List<Invoice> getInvoicesWithReference(String referenceField, String invoiceRefRegEx, String reference) throws Exception {
+	
+		String referenceFields[] = null;
+		if (referenceField.contains(",")) {
+			referenceFields = referenceField.split(",");
+		} 
 		
-		if (invoiceReferenceMap==null || !orgNo.equals(mapOrgNo)) {
-
-			this.referenceField = referenceField;
-			
-			log.info("Refreshing invoiceMap using " + referenceField + ". This might take some time...");
-			
-			bof = getFortnoxAdapter(orgNo);
-			
-			CompanySetting cs = bof.getClient().getCompanySetting();
-			clientName = cs.getName();
-			taxId = cs.getOrganizationNumber();
-			
-			invoiceReferenceMap = new TreeMap<String, List<Invoice>>();
-			invoiceMap = new TreeMap<String, Invoice>();
-			
-			Invoices invoices = bof.getClient().getInvoices(FortnoxConstants.FILTER_UNPAID);
-			// Get unposted as well
-			Invoices unposted = bof.getClient().getInvoices(FortnoxConstants.FILTER_UNBOOKED);
-			
-			List<InvoiceSubset> subsetList = invoices.getInvoiceSubset();
-			if (subsetList!=null) {
-				if (unposted.getInvoiceSubset()!=null)
-					subsetList.addAll(unposted.getInvoiceSubset());
-			} else {
-				subsetList = unposted.getInvoiceSubset();
+		if (referenceFields==null)
+			return invoiceMapper.selectInvoiceMap(referenceField, invoiceRefRegEx).getInvoicesWithReference(reference);
+		else {
+			List<Invoice> summed = new ArrayList<Invoice>();
+			for (String f : referenceFields) {
+				summed.addAll(invoiceMapper.selectInvoiceMap(f, invoiceRefRegEx).getInvoicesWithReference(reference));
 			}
-
-			// If there's no unposted or unpaid invoices return empty invoiceMap
-			if (subsetList==null)
-				return invoiceReferenceMap;
-			
-			log.info("{} invoices to map up.", subsetList.size());
-
-			Pattern re = null;
-			Matcher m = null;
-			
-			if (invoiceRefRegEx!=null && invoiceRefRegEx.trim().length()>0) {
-				re = Pattern.compile(invoiceRefRegEx);
-			}
-			
-			int invoiceCount = 0;
-			
-			Invoice i;
-			List<Invoice> existing = null;
-			String refInFortnox = null;
-			for (InvoiceSubset ii : subsetList) {
-				i = bof.getClient().getInvoice(ii.getDocumentNumber());
-				
-				if (i.getBalance()!=null && i.getBalance().equals(Double.valueOf(0))) {
-					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no open balance. Skipping.");
-					continue;
-				}
-				
-				// Add to tax subject map
-				taxSubjectInvoiceMapper.addInvoice(i);
-				
-				refInFortnox = getInvoiceReference(i);
-
-				// Apply regex if needed
-				if (re!=null && refInFortnox!=null) {
-					m = re.matcher(refInFortnox);
-					if (m.matches()) {
-						// If the matcher contains a group
-						if (m.groupCount()>0) {
-							refInFortnox = m.group(1);
-						} else {
-							refInFortnox =m.group();
-						}
-					}
-				}
-				
-				if (refInFortnox!=null && refInFortnox.trim().length()>0) {
-					refInFortnox = refInFortnox.trim();
-					existing = invoiceReferenceMap.get(refInFortnox); 
-					if (existing==null) {
-						existing = new ArrayList<Invoice>();
-						invoiceReferenceMap.put(refInFortnox, existing);
-					}
-					existing.add(i);
-					
-				} else {
-					log.info("Fortnox Invoice " + i.getDocumentNumber() + " has no reference in [" + referenceField + "].");
-				}
-				
-				// Add to invoice map
-				invoiceMap.put(i.getDocumentNumber(), i);
-				
-				invoiceCount++;
-				if (invoiceCount%100 == 0) {
-					log.info("{} invoices mapped...", invoiceCount);
-				}
-				
-			}
-			// Associate invoice map access token with access token
-			mapOrgNo = orgNo;
-			if (log.isDebugEnabled()) {
-				log.debug("Cached " + invoiceReferenceMap.size() + " invoices for " + taxId + " : " + clientName);
-			}
-			
+			return summed;
 		}
-
-		return invoiceReferenceMap;
+		
+		
 	}
 
 	public String getInvoiceReference(Invoice i) {
@@ -652,7 +569,8 @@ public class FortnoxClient {
 				
 				// If reference type is something else, create an invoice map using the given
 				// invoice ref type.
-				invoices = getInvoiceMap(orgNo, invoiceRefType, invoiceRefRegEx).get(invoiceRef);
+				invoices = getInvoicesWithReference(invoiceRefType, invoiceRefRegEx, invoiceRef);
+				
 				if (invoices==null) {
 					
 					 if (!invoiceRefType.toLowerCase().contains("invoice") && !invoiceRefType.toLowerCase().contains("ocr")) { 
@@ -700,7 +618,7 @@ public class FortnoxClient {
 			@Header(value="modeOfPayment")String modeOfPayment,
 			@Header(value="invoice")Invoice invoice,
 			@Header(value="bookkeepPayment")Boolean bookkeepPayment,
-			Payment payment) throws Exception {
+			Payment<?> payment) throws Exception {
 		
 		// TODO: Use FortnoxClient3.payCustomerInvoice to avoid duplicating code
 		
@@ -968,14 +886,14 @@ public class FortnoxClient {
 			// Double check tax id if it exists
 			if (bp.getTaxId()!=null && bp.getTaxId().trim().length()>0 && result.getOrganisationNumber()!=null && result.getOrganisationNumber().trim().length()>0) {
 				
-				if (!bof.getClient().formatTaxId(bp.getTaxId(), bp.isCompany()).equals(bof.getClient().formatTaxId(result.getOrganisationNumber(), bp.isCompany()))) {
+				if (!FortnoxClient3.formatTaxId(bp.getTaxId(), bp.isCompany()).equals(FortnoxClient3.formatTaxId(result.getOrganisationNumber(), bp.isCompany()))) {
 					log.warn("Customer number " + bp.getbPartnerId() + " and org no " + bp.getTaxId() + " doesn't match. Lookup using tax id");
 					// Try looking up using tax id
 					try {
 						result = bof.getClient().getCustomerByTaxId(bp.getTaxId(), bp.isCompany());
 						bp.setbPartnerId(Integer.parseInt(result.getCustomerNumber()));
 					} catch (Exception e) {
-						if (!e.getMessage().contains(bof.getClient().formatTaxId(bp.getTaxId(), bp.isCompany()))) {
+						if (!e.getMessage().contains(FortnoxClient3.formatTaxId(bp.getTaxId(), bp.isCompany()))) {
 							// The message contains the taxId if not found.
 							throw e;
 						} else {
