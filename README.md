@@ -17,7 +17,7 @@ feature:install camel-infometric
 
 ## Make a redeployable kar in Karaf
 
-	kar:create camel-notima-utils-0.0.8-SNAPSHOT
+	kar:create camel-notima-utils-0.0.8
 
 ### Snapshots
 
