@@ -8,7 +8,7 @@ Depends on https://github.com/notima/businessObjectAdapters
 In karaf shell
 
 ```
-feature:repo-add mvn:org.notima.camel-adapters/camel-feature/0.0.8-SNAPSHOT/xml/features
+feature:repo-add mvn:org.notima.camel-adapters/camel-feature/0.0.8/xml/features
 feature:install camel-fortnox4j
 feature:install camel-sveawebpay
 feature:install camel-ubl
