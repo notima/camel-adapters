@@ -7,14 +7,12 @@ import javax.xml.bind.JAXB;
 
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
 import org.junit.Test;
 import org.notima.generic.businessobjects.Invoice;
 
 public class TestBoInvoiceToEInvoice extends CamelBlueprintTestSupport {
 
-	protected JndiRegistry registry;
 	
 	@Produce(uri = "direct:convertInvoice")
 	protected ProducerTemplate template;

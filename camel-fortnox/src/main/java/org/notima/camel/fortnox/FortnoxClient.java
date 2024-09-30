@@ -815,7 +815,7 @@ public class FortnoxClient {
 	 * @param order					Order number.
 	 * @param useArticles			If true, articles are used when creating invoice lines.
 	 * @param invoiceDate			If non null, this date is used as invoice date.
-	 * @param defaultRevenueAccount	If set, this is used as default revenue account for the invoice.
+	 * @param debugAdapter			If set enable debug.
 	 * @return
 	 * @throws Exception
 	 * @throws FortnoxInvoiceException

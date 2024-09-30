@@ -29,7 +29,6 @@ import com.svea.webpay.common.reconciliation.PaymentReportGroup;
 import com.svea.webpayadmin.WebpayAdminClient;
 import com.svea.webpayadmin.WebpayAdminClientMain;
 import com.svea.webpayadminservice.client.CreateOrderRequest;
-import com.svea.webpayadminservice.client.CreateOrderResponse;
 import com.svea.webpayadminservice.client.CreateOrderResponse2;
 import com.svea.webpayadminservice.client.DeliveryResponse;
 import com.svea.webpayadminservice.client.OrderType;
@@ -442,12 +441,12 @@ public class WebpayAdminCamelClient {
 	 * @param src
 	 * @return
 	 */
-	public CreateOrderResponse createOrder(
+	public CreateOrderResponse2 createOrder(
 			@Header(value="accountNo")String accountNo, 
 			Order<?> src) throws Exception  
 	{
 
-		CreateOrderResponse result = null;
+		CreateOrderResponse2 result = null;
 		
 		SveaCredential cr = getCredentialFromAccountNo(accountNo);
 		if (cr!=null) {

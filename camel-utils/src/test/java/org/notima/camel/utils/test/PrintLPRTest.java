@@ -1,6 +1,11 @@
-package org.notima.camel.utils;
+package org.notima.camel.utils.test;
 
 import java.util.List;
+
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.support.DefaultExchange;
+import org.notima.camel.utils.PrintLPR;
+import org.apache.camel.Exchange;
 import java.util.ArrayList;
 
 public class PrintLPRTest
@@ -10,8 +15,14 @@ public class PrintLPRTest
             System.out.println("Usage: PrintLPRTest printerName fileName [pages]");
             return;
         }
+        
+        DefaultCamelContext ctx = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(ctx);
+        exchange.setProperty("printerName", args[0]);
+        
         final PrintLPR lp = new PrintLPR();
         final List<String> options = new ArrayList<String>();
+        
         options.add("zeMediaTracking=Mark");
         options.add("PageSize=Custom.100x25");
         options.add("zeLabelTop=-40");
@@ -21,7 +32,7 @@ public class PrintLPRTest
         }
         try {
             lp.listPrinters();
-            lp.print(args[0], args[1], pages, options);
+            lp.print(exchange, args[1], pages, options);
         }
         catch (Exception e) {
             e.printStackTrace();

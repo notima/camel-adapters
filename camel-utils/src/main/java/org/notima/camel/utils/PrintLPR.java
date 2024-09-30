@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.Header;
-import org.apache.camel.Property;
 import org.notima.util.RuntimeUtil;
 
 public class PrintLPR
@@ -28,8 +28,11 @@ public class PrintLPR
         return options;
     }
     
-    public int print(@Property("printerName") final String printerName, @Header("printFileName") final String file, @Header("printPages") final String pages, @Header("printOptions") final List<String> options) throws Exception {
-        if (file == null || file.trim().length() == 0) {
+    public int print(final Exchange exchange, @Header("printFileName") final String file, @Header("printPages") final String pages, @Header("printOptions") final List<String> options) throws Exception {
+        
+    	String printerName = exchange.getProperty("printerName", String.class);
+    	
+    	if (file == null || file.trim().length() == 0) {
             throw new Exception("Parameter file is mandatory");
         }
         final File f = new File(file);

@@ -35,7 +35,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>4.2.0</version>
+				<version>5.1.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -43,7 +43,10 @@
 							org.notima.camel.fortnox
 						</Export-Package>
 						<Import-Package>
-							javax.xml.bind;version="[2.2,3)",*
+							jakarta.xml.bind;version="[3.0,4.1)",
+							jakarta.xml.bind.annotation;version="[3.0,4.1)",
+							jakarta.xml.bind.annotation.adapters;version="[3.0,4.1)",
+							*
 						</Import-Package>
 					</instructions>
 				</configuration>
