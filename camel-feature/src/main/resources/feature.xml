@@ -8,11 +8,11 @@
 
 		<feature>camel-core</feature>
 		<feature>camel-blueprint</feature>
-		<feature>camel-quartz2</feature>
+		<feature>camel-quartz</feature>
 		<feature>camel-jaxb</feature>
 		<feature>camel-csv</feature>
 		<feature>camel-mail</feature>
-        <bundle>mvn:javax.persistence/javax.persistence-api/2.2</bundle>
+        <bundle>mvn:jakarta.persistence/jakarta.persistence-api/3.2.0</bundle>
       	<bundle>mvn:org.notima.camel-adapters/camel-utils/${project.version}</bundle>
 	
 	</feature>
