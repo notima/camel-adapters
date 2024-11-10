@@ -20,7 +20,7 @@
 		<businessadapters.version>1.10.0-SNAPSHOT</businessadapters.version>
 		<karaf.version>4.4.6</karaf.version>
 		<camel.version>3.21.4</camel.version>
-		<notima-util.version>0.0.7</notima-util.version>
+		<notima-util.version>1.0.1</notima-util.version>
 		<bankgiro-api.version>1.3.7</bankgiro-api.version>
 	</properties>
 
