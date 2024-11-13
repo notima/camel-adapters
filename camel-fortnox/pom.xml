@@ -43,9 +43,9 @@
 							org.notima.camel.fortnox
 						</Export-Package>
 						<Import-Package>
-							jakarta.xml.bind,
-							jakarta.xml.bind.annotation,
-							jakarta.xml.bind.annotation.adapters,
+							javax.xml.bind,
+							javax.xml.bind.annotation,
+							javax.xml.bind.annotation.adapters,
 							*
 						</Import-Package>
 					</instructions>
