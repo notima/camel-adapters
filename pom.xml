@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<businessadapters.version>1.10.0-SNAPSHOT</businessadapters.version>
 		<karaf.version>4.4.6</karaf.version>
-		<camel.version>3.11.7</camel.version>
+		<camel.version>3.22.2</camel.version>
 		<notima-util.version>1.0.1</notima-util.version>
 		<bankgiro-api.version>1.3.7</bankgiro-api.version>
 	</properties>
