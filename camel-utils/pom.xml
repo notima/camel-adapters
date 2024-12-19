@@ -28,10 +28,11 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-										org.notima.camel.processor,
-										org.notima.camel.utils,										
+							org.notima.camel.processor,
+							org.notima.camel.utils,										
 						</Export-Package>
 						<Import-Package>
+							javax.activation;version="[1.1,2)",
 							*
 						</Import-Package>
 					</instructions>
