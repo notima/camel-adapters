@@ -180,7 +180,7 @@ public class FortnoxClient {
 		
 		bof = getFortnoxAdapter(orgNo);
 		
-		Map<Object,Object> unposted = bof.lookupList(FortnoxAdapter.LIST_UNPOSTED);
+		Map<Object,Object> unposted = bof.lookupList(FortnoxAdapter.LIST_UNPOSTED, true);
 		
 		// Iterate through the result and find the unposted with given payment term
 		
