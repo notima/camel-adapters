@@ -44,6 +44,12 @@
 					<version>${karaf.version}</version>
 					<extensions>true</extensions>
 				</plugin>
+				<!-- Pinned: unversioned (latest) 6.x requires JDK 17 -->
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>5.1.8</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	
