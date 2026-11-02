@@ -4,8 +4,13 @@
   <parent>
     <groupId>org.notima.camel-adapters</groupId>
     <artifactId>camel-adapters</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
   </parent>
+
+	<properties>
+		<!-- the dependencies of the flattened pom have their versions -->
+		<flatten.dependencyManagement>remove</flatten.dependencyManagement>
+	</properties>
   <artifactId>camel-bankgiro</artifactId>
   <name>Camel Bankgiro</name>
   <packaging>bundle</packaging>  
